@@ -70,8 +70,12 @@ export const professionalProfiles = pgTable("professional_profiles", {
   credentialsVerification: verificationStatusEnum("credentials_verification")
     .notNull()
     .default("unverified"),
+  credentialsObjectKey: text("credentials_object_key"),
+  credentialsContentType: text("credentials_content_type"),
+  credentialsUploadedAt: timestamp("credentials_uploaded_at", { withTimezone: true }),
   credentialsReviewedAt: timestamp("credentials_reviewed_at", { withTimezone: true }),
   credentialsReviewerId: text("credentials_reviewer_id").references(() => users.id),
+  credentialsRejectionReason: text("credentials_rejection_reason"),
   activelySeeking: boolean("actively_seeking").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),

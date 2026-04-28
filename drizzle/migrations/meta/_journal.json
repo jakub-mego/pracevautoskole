@@ -1,0 +1,48 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1777131313788,
+      "tag": "0000_old_morgan_stark",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777200837870,
+      "tag": "0001_oval_the_spike",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1777201203977,
+      "tag": "0002_shallow_impossible_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1777224653474,
+      "tag": "0003_optimal_silver_surfer",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1777225365961,
+      "tag": "0004_glossy_reaper",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1777225763997,
+      "tag": "0005_right_invisible_woman",
+      "breakpoints": true
+    }
+  ]
+}

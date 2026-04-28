@@ -54,4 +54,37 @@ Viz `../dev/repo-structure.md`.
 
 ## Deploy
 
-Coolify na Hetzner VPS — `deploy/coolify.yml` (TODO).
+Build je standalone Docker image (`output: "standalone"` v `next.config.ts`).
+Image dělá:
+
+1. `node scripts/migrate.mjs` — aplikuje Drizzle migrace na DB z `DATABASE_URL`
+2. `node server.js` — startuje Next.js server na portu 3000
+
+Healthcheck endpoint: `GET /api/health` (vrací 503 pokud DB nesedí).
+
+### Coolify (Hetzner VPS)
+
+1. **Nová Application** → Dockerfile, repo & větev
+2. **Resource limits**: 1 vCPU + 512 MB stačí pro start
+3. **Environment variables** (production):
+   - `DATABASE_URL` — managed Postgres v Coolify
+   - `BETTER_AUTH_SECRET` — `openssl rand -base64 48`
+   - `BETTER_AUTH_URL=https://pracevautoskole.cz`
+   - `NEXT_PUBLIC_APP_URL=https://pracevautoskole.cz`
+   - `RESEND_API_KEY`, `EMAIL_FROM` (ověřená doména v Resendu)
+   - `ARES_BASE_URL=https://ares.gov.cz/ekonomicke-subjekty-v-be/rest`
+   - (volitelné) `MINIO_*`, `STRIPE_*`, `FIO_API_TOKEN` — až budou potřeba
+4. **Domain** + automatické HTTPS přes Caddy
+5. **Healthcheck**: Coolify sám čte `HEALTHCHECK` z Dockerfile
+
+### Lokální build test
+
+```bash
+docker build -t pracevautoskole .
+docker run --rm -p 3000:3000 \
+  -e DATABASE_URL=postgresql://pva:pva_dev_password@host.docker.internal:5432/pracevautoskole \
+  -e BETTER_AUTH_SECRET=test-test-test-test-test-test-test \
+  -e BETTER_AUTH_URL=http://localhost:3000 \
+  -e NEXT_PUBLIC_APP_URL=http://localhost:3000 \
+  pracevautoskole
+```

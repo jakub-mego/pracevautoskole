@@ -1,6 +1,11 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/lib/db";
+import { sendEmail } from "@/lib/email/client";
+import {
+  verificationEmail,
+  resetPasswordEmail,
+} from "@/lib/email/templates";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -11,6 +16,18 @@ export const auth = betterAuth({
     enabled: true,
     requireEmailVerification: false,
     minPasswordLength: 10,
+    sendResetPassword: async ({ user, url }) => {
+      const tpl = resetPasswordEmail({ name: user.name ?? null, url });
+      await sendEmail({ to: user.email, ...tpl });
+    },
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      const tpl = verificationEmail({ name: user.name ?? null, url });
+      await sendEmail({ to: user.email, ...tpl });
+    },
   },
   session: {
     expiresIn: 60 * 60 * 24 * 30,

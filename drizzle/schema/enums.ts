@@ -67,3 +67,29 @@ export const productKindEnum = pgEnum("product_kind", [
   "active_badge",
   "database_access",
 ]);
+
+export const reportTargetEnum = pgEnum("report_target", [
+  "listing",
+  "profile",
+]);
+
+export const reportReasonEnum = pgEnum("report_reason", [
+  "spam",
+  "inappropriate",
+  "discrimination",
+  "duplicate",
+  "out_of_scope",
+  "other",
+]);
+
+export const reportStatusEnum = pgEnum("report_status", [
+  "open",
+  "resolved",
+  "dismissed",
+]);
+
+export const reviewStatusEnum = pgEnum("review_status", [
+  "pending",
+  "published",
+  "hidden",
+]);

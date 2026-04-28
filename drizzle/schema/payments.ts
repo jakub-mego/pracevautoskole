@@ -7,7 +7,9 @@ export const payments = pgTable(
   "payments",
   {
     id: text("id").primaryKey(),
-    userId: text("user_id").notNull().references(() => users.id, { onDelete: "restrict" }),
+    // Po smazání usera (GDPR) se userId nastaví na NULL — platební záznamy
+    // zůstávají pro účetní povinnosti (zákon č. 563/1991 Sb. o účetnictví, §31).
+    userId: text("user_id").references(() => users.id, { onDelete: "set null" }),
     listingId: text("listing_id").references(() => listings.id, { onDelete: "set null" }),
     product: productKindEnum("product").notNull(),
     provider: paymentProviderEnum("provider").notNull(),
@@ -15,6 +17,8 @@ export const payments = pgTable(
     amountCzk: integer("amount_czk").notNull(),
     variableSymbol: text("variable_symbol").unique(),
     externalId: text("external_id"),
+    /** Číslo dokladu o platbě (po zaplacení), formát YYYY-XXXXXXXX. */
+    receiptNumber: text("receipt_number").unique(),
     metadata: jsonb("metadata"),
     paidAt: timestamp("paid_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

@@ -1,26 +1,291 @@
 @import "tailwindcss";
 
+/* =========================================================================
+ * pracevautoskole.cz — design system
+ * Editorial × confident tech. Deep teal + warm cream + Fraunces display.
+ * ========================================================================= */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand — deep teal, distinktivní v CZ trhu (vyhýbá se modré jobs.cz) */
+  --color-brand-50: #effaf7;
+  --color-brand-100: #d6f1ea;
+  --color-brand-200: #a9e2d4;
+  --color-brand-300: #74cbb7;
+  --color-brand-400: #4cb19a;
+  --color-brand-500: #2f9381;
+  --color-brand-600: #21766a;
+  --color-brand-700: #1b5e57;
+  --color-brand-800: #144842;
+  --color-brand-900: #0f3431;
+  --color-brand-950: #07201f;
+
+  /* Akcentní terracotta — pro vzácné highlight momenty */
+  --color-accent-50: #fef3ee;
+  --color-accent-300: #f0a884;
+  --color-accent-500: #c54b1f;
+  --color-accent-600: #9d3a17;
+
+  /* Neutrály — warm stone, ne cool zinc */
+  --color-canvas: #faf7f0;
+  --color-canvas-muted: #f3eee2;
+  --color-paper: #ffffff;
+  --color-ink: #1a1d1c;
+  --color-ink-muted: #5a5a55;
+  --color-ink-soft: #8a8a82;
+  --color-line: #e8e2d4;
+  --color-line-strong: #d4cdba;
+  --color-line-soft: #f0eadc;
+
+  /* Sémantické */
+  --color-success: var(--color-brand-700);
+  --color-success-bg: var(--color-brand-50);
+  --color-warning-bg: #fef3c7;
+  --color-warning-fg: #854d0e;
+  --color-danger: #b1321c;
+  --color-danger-bg: #fdecea;
+
+  /* Stíny */
+  --shadow-card: 0 1px 2px rgba(15, 52, 49, 0.04),
+    0 4px 12px rgba(15, 52, 49, 0.04);
+  --shadow-card-hover: 0 4px 12px rgba(15, 52, 49, 0.08),
+    0 16px 40px rgba(15, 52, 49, 0.08);
+  --shadow-elevated: 0 30px 80px -30px rgba(15, 52, 49, 0.25);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--color-canvas);
+  --color-foreground: var(--color-ink);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-fraunces);
+
+  --color-brand-50: var(--color-brand-50);
+  --color-brand-100: var(--color-brand-100);
+  --color-brand-200: var(--color-brand-200);
+  --color-brand-300: var(--color-brand-300);
+  --color-brand-400: var(--color-brand-400);
+  --color-brand-500: var(--color-brand-500);
+  --color-brand-600: var(--color-brand-600);
+  --color-brand-700: var(--color-brand-700);
+  --color-brand-800: var(--color-brand-800);
+  --color-brand-900: var(--color-brand-900);
+  --color-brand-950: var(--color-brand-950);
+
+  --color-accent-500: var(--color-accent-500);
+  --color-accent-600: var(--color-accent-600);
+
+  --color-canvas: var(--color-canvas);
+  --color-canvas-muted: var(--color-canvas-muted);
+  --color-paper: var(--color-paper);
+  --color-ink: var(--color-ink);
+  --color-ink-muted: var(--color-ink-muted);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-line: var(--color-line);
+  --color-line-strong: var(--color-line-strong);
+  --color-line-soft: var(--color-line-soft);
+
+  --color-success: var(--color-success);
+  --color-success-bg: var(--color-success-bg);
+  --color-warning-bg: var(--color-warning-bg);
+  --color-warning-fg: var(--color-warning-fg);
+  --color-danger: var(--color-danger);
+  --color-danger-bg: var(--color-danger-bg);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* === BASE ============================================================== */
+html,
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Helvetica, Arial, sans-serif;
+  font-feature-settings: "ss01" on, "cv11" on;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-brand-200);
+  color: var(--color-brand-950);
+}
+
+/* === DISPLAY TYPOGRAPHY ================================================
+ * Fraunces variable serif. Optical size (opsz=144) pro velké display
+ * sazby. Soft=100 pro modernější, ne archaický feel.
+ * Použij class .font-display nebo .display-* pro nadpisy v hero a sekcích.
+ * ====================================================================== */
+.font-display {
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-feature-settings: "ss01" on, "ss02" on;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  letter-spacing: -0.02em;
+}
+
+.display-xs {
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-variation-settings: "opsz" 36, "SOFT" 100;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+.display-sm {
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-variation-settings: "opsz" 48, "SOFT" 100;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+.display-md {
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.0;
+}
+.display-lg {
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+}
+.display-xl {
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
+}
+
+/* Eyebrow — malé uppercase popisky nad nadpisy */
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-brand-700);
+}
+
+/* Tabular numbers pro statistiky */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* === SURFACE / TEXTURE ================================================ */
+.surface-grain {
+  background-image:
+    radial-gradient(rgba(26, 29, 28, 0.04) 1px, transparent 1px),
+    radial-gradient(rgba(26, 29, 28, 0.025) 1px, transparent 1px);
+  background-size: 18px 18px, 11px 11px;
+  background-position: 0 0, 9px 5px;
+}
+
+/* Aurora — soft barevné blobs pro hero pozadí */
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+.aurora::before,
+.aurora::after,
+.aurora > .blob {
+  content: "";
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+  will-change: transform;
+}
+.aurora::before {
+  width: 56rem;
+  height: 56rem;
+  left: -18rem;
+  top: -22rem;
+  background: radial-gradient(circle at center, var(--color-brand-200) 0%, transparent 60%);
+  animation: aurora-drift-a 22s ease-in-out infinite alternate;
+}
+.aurora::after {
+  width: 48rem;
+  height: 48rem;
+  right: -16rem;
+  top: -10rem;
+  background: radial-gradient(circle at center, #f3d6b8 0%, transparent 60%);
+  opacity: 0.45;
+  animation: aurora-drift-b 28s ease-in-out infinite alternate;
+}
+.aurora > .blob {
+  width: 64rem;
+  height: 40rem;
+  left: 30%;
+  bottom: -28rem;
+  background: radial-gradient(circle at center, var(--color-brand-300) 0%, transparent 65%);
+  opacity: 0.32;
+  animation: aurora-drift-c 26s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-drift-a {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(4rem, 2rem) scale(1.05); }
+}
+@keyframes aurora-drift-b {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-3rem, 4rem) scale(1.08); }
+}
+@keyframes aurora-drift-c {
+  0% { transform: translate(-2rem, 0) scale(1); }
+  100% { transform: translate(3rem, -3rem) scale(1.1); }
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 50s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora::before,
+  .aurora::after,
+  .aurora > .blob,
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* === DARK BAND === */
+.dark-band {
+  background:
+    radial-gradient(circle at 15% 0%, rgba(47, 147, 129, 0.18), transparent 40%),
+    radial-gradient(circle at 90% 100%, rgba(197, 75, 31, 0.10), transparent 50%),
+    var(--color-brand-950);
+  color: #effaf7;
+}
+
+/* === FORM CONTROLS — base styling that works inside Tailwind utilities ==
+ * Pages mohou stále override.přes Tailwind. Toto jen sjednocuje vzhled
+ * defaultu — focus ring v brand barvě.
+ * ====================================================================== */
+input:where([type="text"], [type="email"], [type="password"], [type="tel"], [type="url"], [type="number"], [type="search"], [type="date"]),
+select,
+textarea {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: none;
 }
