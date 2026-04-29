@@ -9,11 +9,9 @@ import {
 import { listLandingListings } from "@/lib/listings/queries";
 import { LandingListingList } from "@/components/marketing/landing-listing-list";
 
-export async function generateStaticParams() {
-  return [...SEO_CITIES, ...SEO_ROLES].map((x) => ({ slug: x.slug }));
-}
-
-export const dynamic = "force-static";
+// Renderujeme na request, ne při buildu — build kontejner nemá síť na DB.
+// Cache na CDN/proxy řešíme `revalidate`em (1 hod = stačí pro inzeráty).
+export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
 export async function generateMetadata({

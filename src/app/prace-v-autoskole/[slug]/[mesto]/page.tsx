@@ -5,17 +5,12 @@ import {
   SEO_ROLES,
   getCityBySlug,
   getRoleBySlug,
-  listAllLandingPaths,
 } from "@/lib/seo/landing-data";
 import { listLandingListings } from "@/lib/listings/queries";
 import { LandingListingList } from "@/components/marketing/landing-listing-list";
 
-export async function generateStaticParams() {
-  const { combos } = listAllLandingPaths();
-  return combos.map((c) => ({ slug: c.roleSlug, mesto: c.mestoSlug }));
-}
-
-export const dynamic = "force-static";
+// Renderujeme na request, ne při buildu — build kontejner nemá síť na DB.
+export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
 export async function generateMetadata({
