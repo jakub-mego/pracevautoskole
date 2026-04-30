@@ -58,14 +58,6 @@ export const SEO_ROLES: {
       "Učitelé autoškoly vyučují teorii i jízdy. Pro výkon profese je třeba minimálně 24 let, profesní způsobilost a 3 roky řízení v dané kategorii.",
   },
   {
-    slug: "mistr-praktickeho-vycviku",
-    role: "master_practice",
-    name: "Mistr odborného výcviku",
-    namePlural: "mistrů odborného výcviku",
-    intro:
-      "Mistři odborného výcviku vedou praktickou přípravu — především pro vyšší skupiny C, D a profesní vzdělávání řidičů.",
-  },
-  {
     slug: "lektor-skoleni-ridicu",
     role: "lecturer_48",
     name: "Lektor pravidelného školení řidičů (§ 48)",

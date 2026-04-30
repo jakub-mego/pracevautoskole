@@ -11,8 +11,8 @@ export const dynamic = "force-dynamic";
 
 const ROLES_TICKER = [
   "Učitel autoškoly",
-  "Mistr odborného výcviku",
   "Lektor § 48",
+  "Soudní tlumočník",
   "Provozní / admin",
   "Zdravotník — první pomoc",
   "Manažer autoškoly",

@@ -57,6 +57,13 @@
       "when": 1777531821146,
       "tag": "0007_previous_gorgon",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1777535148206,
+      "tag": "0008_cooing_ulik",
+      "breakpoints": true
     }
   ]
 }

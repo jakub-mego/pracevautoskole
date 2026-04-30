@@ -22,12 +22,13 @@ const IcoSchema = z.string().trim().regex(/^\d{8}$/, "IČO musí mít 8 číslic
 
 const ProfessionalRoleSchema = z.enum([
   "instructor",
-  "master_practice",
+  "examiner",
   "operator_admin",
   "lecturer_48",
   "manager",
   "medic",
   "court_interpreter",
+  "other",
 ]);
 
 const LicenseCategorySchema = z.enum([
@@ -191,6 +192,113 @@ export async function createProfessionalProfileAction(
   }
 
   redirect("/dashboard");
+}
+
+const OtherWorkerInputSchema = z.object({
+  displayName: z.string().trim().min(2, "Zadej jméno min. 2 znaky.").max(120),
+  city: z.string().trim().max(80).optional().or(z.literal("")),
+  region: z.string().trim().max(80).optional().or(z.literal("")),
+});
+
+export async function createOtherWorkerProfileAction(
+  _prev: FormActionState,
+  formData: FormData,
+): Promise<FormActionState> {
+  const session = await requireSession();
+  const userId = session.user.id;
+
+  const existing = await getProfileByUserId(userId);
+  if (existing) redirect("/dashboard");
+
+  const parsed = OtherWorkerInputSchema.safeParse({
+    displayName: formData.get("displayName"),
+    city: formData.get("city") ?? "",
+    region: formData.get("region") ?? "",
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Neplatná data." };
+  }
+  const { displayName, city, region } = parsed.data;
+
+  const profileId = newId();
+  const slug = uniqueSlug(displayName);
+
+  try {
+    await db.transaction(async (tx) => {
+      await tx.insert(profiles).values({
+        id: profileId,
+        userId,
+        type: "professional",
+        slug,
+        displayName,
+        city: city || null,
+        region: region || null,
+      });
+      await tx.insert(professionalProfiles).values({
+        profileId,
+        anonymous: false,
+      });
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Vytvoření profilu selhalo.";
+    return { error: message };
+  }
+
+  redirect("/dashboard");
+}
+
+const OtherRoleChoiceSchema = z.object({
+  choice: z.enum(["operator_admin", "medic", "other"]),
+  customLabel: z.string().trim().max(80).optional().or(z.literal("")),
+});
+
+export async function setOtherWorkerRoleAction(
+  _prev: FormActionState,
+  formData: FormData,
+): Promise<FormActionState> {
+  const session = await requireSession();
+  const profile = await getProfileByUserId(session.user.id);
+  if (!profile || profile.type !== "professional") {
+    return { error: "Tato akce je dostupná jen profesionálovi." };
+  }
+
+  const parsed = OtherRoleChoiceSchema.safeParse({
+    choice: formData.get("choice"),
+    customLabel: formData.get("customLabel") ?? "",
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Neplatná data." };
+  }
+  const { choice, customLabel } = parsed.data;
+  if (choice === "other" && !(customLabel && customLabel.length >= 2)) {
+    return { error: "U volby 'Jiné' napiš krátký popis role (min. 2 znaky)." };
+  }
+
+  try {
+    await db.transaction(async (tx) => {
+      await tx
+        .delete(professionalRoles)
+        .where(eq(professionalRoles.profileId, profile.id));
+      await tx.insert(professionalRoles).values({
+        id: newId(),
+        profileId: profile.id,
+        role: choice,
+      });
+      await tx
+        .update(professionalProfiles)
+        .set({
+          customRoleLabel: choice === "other" ? customLabel || null : null,
+          updatedAt: new Date(),
+        })
+        .where(eq(professionalProfiles.profileId, profile.id));
+    });
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Uložení role selhalo.",
+    };
+  }
+
+  return undefined;
 }
 
 const PriceSchema = z.coerce

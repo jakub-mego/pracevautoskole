@@ -13,12 +13,12 @@ export const profileTypeEnum = pgEnum("profile_type", [
 export const professionalRoleEnum = pgEnum("professional_role", [
   "instructor",
   "examiner",
-  "master_practice",
   "operator_admin",
   "lecturer_48",
   "manager",
   "medic",
   "court_interpreter",
+  "other",
 ]);
 
 export const licenseCategoryEnum = pgEnum("license_category", [

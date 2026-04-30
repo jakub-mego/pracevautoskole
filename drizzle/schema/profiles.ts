@@ -77,6 +77,7 @@ export const professionalProfiles = pgTable("professional_profiles", {
   credentialsReviewerId: text("credentials_reviewer_id").references(() => users.id),
   credentialsRejectionReason: text("credentials_rejection_reason"),
   activelySeeking: boolean("actively_seeking").notNull().default(false),
+  customRoleLabel: text("custom_role_label"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });

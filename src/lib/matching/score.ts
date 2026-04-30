@@ -1,10 +1,12 @@
 export type ProfessionalRole =
   | "instructor"
-  | "master_practice"
+  | "examiner"
   | "operator_admin"
   | "lecturer_48"
   | "manager"
-  | "medic";
+  | "medic"
+  | "court_interpreter"
+  | "other";
 
 export type LicenseCategory =
   | "AM" | "A1" | "A2" | "A"
@@ -49,7 +51,7 @@ const WEIGHTS = {
 // Některé role nepotřebují řidičský průkaz pro shodu (např. zdravotník, manager).
 const ROLES_REQUIRING_LICENSE: ProfessionalRole[] = [
   "instructor",
-  "master_practice",
+  "examiner",
 ];
 
 function intersect<T>(a: T[], b: T[]): T[] {

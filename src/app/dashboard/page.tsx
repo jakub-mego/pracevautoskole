@@ -16,6 +16,7 @@ import { RecommendationCard } from "@/components/matching/recommendation-card";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { ButtonLink, ArrowRight } from "@/components/ui/button";
 import { CourtInterpreterDashboard } from "@/components/dashboard/court-interpreter-dashboard";
+import { OtherWorkerRolePicker } from "@/components/forms/other-worker-role-picker";
 
 export const metadata = {
   title: "Přehled",
@@ -28,37 +29,46 @@ export default async function DashboardPage() {
   const profile = await getProfileByUserId(session.user.id);
   if (!profile) redirect("/onboarding");
 
-  if (profile.type === "professional") {
-    const roles = await getProfessionalRolesByProfileId(profile.id);
-    if (roles.length === 1 && roles[0] === "court_interpreter") {
-      const [details, conversations, unread] = await Promise.all([
-        getCourtInterpreterProfileByProfileId(profile.id),
-        listConversationsForProfile(profile.id),
-        countUnreadForProfile(profile.id),
-      ]);
-      const recent = conversations.slice(0, 4).map((c) => ({
-        id: c.conversation.id,
-        name: c.counterpartAnonymousVisible
-          ? "Anonymní profesionál"
-          : c.counterpart.displayName,
-        preview: c.lastMessageBody
-          ? (c.lastMessageAuthorIsViewer ? "Ty: " : "") +
-            (c.lastMessageBody.length > 80
-              ? c.lastMessageBody.slice(0, 80) + "…"
-              : c.lastMessageBody)
-          : "Bez zpráv",
-        unread: c.unread,
-      }));
-      return (
-        <CourtInterpreterDashboard
-          displayName={profile.displayName}
-          details={details}
-          unread={unread}
-          conversations={recent}
-        />
-      );
-    }
+  const profRoles =
+    profile.type === "professional"
+      ? await getProfessionalRolesByProfileId(profile.id)
+      : [];
+
+  if (
+    profile.type === "professional" &&
+    profRoles.length === 1 &&
+    profRoles[0] === "court_interpreter"
+  ) {
+    const [details, conversations, unread] = await Promise.all([
+      getCourtInterpreterProfileByProfileId(profile.id),
+      listConversationsForProfile(profile.id),
+      countUnreadForProfile(profile.id),
+    ]);
+    const recent = conversations.slice(0, 4).map((c) => ({
+      id: c.conversation.id,
+      name: c.counterpartAnonymousVisible
+        ? "Anonymní profesionál"
+        : c.counterpart.displayName,
+      preview: c.lastMessageBody
+        ? (c.lastMessageAuthorIsViewer ? "Ty: " : "") +
+          (c.lastMessageBody.length > 80
+            ? c.lastMessageBody.slice(0, 80) + "…"
+            : c.lastMessageBody)
+        : "Bez zpráv",
+      unread: c.unread,
+    }));
+    return (
+      <CourtInterpreterDashboard
+        displayName={profile.displayName}
+        details={details}
+        unread={unread}
+        conversations={recent}
+      />
+    );
   }
+
+  const needsRolePick =
+    profile.type === "professional" && profRoles.length === 0;
 
   const [recommendations, conversations, unread, listingStats] = await Promise.all([
     getRecommendationsForProfile(profile.id, 5),
@@ -104,6 +114,12 @@ export default async function DashboardPage() {
           </Link>
         </p>
       </header>
+
+      {needsRolePick ? (
+        <section className="mt-8">
+          <OtherWorkerRolePicker />
+        </section>
+      ) : null}
 
       <section className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {stats.map((s) => (

@@ -9,6 +9,8 @@ import { requireSession } from "@/lib/auth/server";
 import { getProfileByUserId } from "@/lib/profiles/queries";
 import { newId } from "@/lib/utils/id";
 import { computeMatchesForListing } from "@/lib/matching/queries";
+import { countPublishedListings } from "@/lib/listings/queries";
+import { computeListingPublishPriceCzk } from "@/lib/payments/products";
 import {
   listings,
   listingRoles,
@@ -18,11 +20,13 @@ import {
 
 const RoleSchema = z.enum([
   "instructor",
-  "master_practice",
+  "examiner",
   "operator_admin",
   "lecturer_48",
   "manager",
   "medic",
+  "court_interpreter",
+  "other",
 ]);
 
 const LicenseSchema = z.enum([
@@ -210,7 +214,7 @@ export async function updateListingAction(
 
 async function setListingStatus(
   id: string,
-  status: "active" | "paused" | "archived",
+  status: "active" | "paused" | "archived" | "pending_payment",
 ) {
   const profile = await ownProfileOrRedirect();
   const owned = await db
@@ -251,7 +255,11 @@ async function setListingStatus(
   revalidatePath("/dashboard");
 }
 
-export async function publishListingAction(id: string) {
+export type PublishResult =
+  | { error: string }
+  | undefined;
+
+export async function publishListingAction(id: string): Promise<PublishResult> {
   const session = await requireSession();
   if (!session.user.emailVerified) {
     return {
@@ -259,6 +267,36 @@ export async function publishListingAction(id: string) {
         "Pro zveřejnění inzerátu si nejdřív ověř e-mail. Odkaz pošleme po kliknutí na žluté tlačítko v hlavičce.",
     };
   }
+
+  const profile = await ownProfileOrRedirect();
+  const owned = await db
+    .select()
+    .from(listings)
+    .where(and(eq(listings.id, id), eq(listings.profileId, profile.id)))
+    .limit(1);
+  const listing = owned[0];
+  if (!listing) return { error: "Inzerát nenalezen." };
+
+  // Re-publish (paused/expired → active) je vždy zdarma — slot je už spotřebovaný.
+  const isFirstPublish = !listing.publishedAt;
+
+  if (isFirstPublish && profile.type !== "employer" && profile.type !== "professional") {
+    return { error: "Neznámý typ profilu pro pricing." };
+  }
+
+  if (isFirstPublish) {
+    const publishedCount = await countPublishedListings(profile.id);
+    const priceCzk = computeListingPublishPriceCzk({
+      profileType: profile.type as "employer" | "professional",
+      alreadyPublishedCount: publishedCount,
+    });
+    if (priceCzk > 0) {
+      // Placený slot — nastavíme pending_payment a redirect na platbu.
+      await setListingStatus(id, "pending_payment");
+      redirect(`/payments?listingId=${id}`);
+    }
+  }
+
   await setListingStatus(id, "active");
   redirect(`/inzeraty/${id}`);
 }

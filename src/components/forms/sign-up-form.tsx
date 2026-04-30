@@ -7,7 +7,12 @@ import { authClient } from "@/lib/auth/client";
 import { Field, Input } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 
-type RoleKey = "employer" | "instructor" | "lecturer_48" | "court_interpreter";
+type RoleKey =
+  | "employer"
+  | "instructor"
+  | "lecturer_48"
+  | "court_interpreter"
+  | "other_worker";
 
 const ROLE_OPTIONS: ReadonlyArray<{
   key: RoleKey;
@@ -33,6 +38,11 @@ const ROLE_OPTIONS: ReadonlyArray<{
     key: "court_interpreter",
     title: "Soudní tlumočník",
     hint: "Tlumočím u zkoušek z odborné způsobilosti.",
+  },
+  {
+    key: "other_worker",
+    title: "Jiný pracovník",
+    hint: "Admin, zdravotník nebo jiná role v autoškole — upřesníš v profilu.",
   },
 ];
 
@@ -62,6 +72,7 @@ function destinationFor(roles: ReadonlySet<RoleKey>): string | null {
   if (roles.size === 0) return null;
   if (roles.has("employer")) return "/onboarding/employer";
   if (roles.has("court_interpreter")) return "/onboarding/court-interpreter";
+  if (roles.has("other_worker")) return "/onboarding/other-worker";
   const proRoles: string[] = [];
   if (roles.has("instructor")) proRoles.push("instructor");
   if (roles.has("lecturer_48")) proRoles.push("lecturer_48");

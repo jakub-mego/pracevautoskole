@@ -8,8 +8,10 @@ import { getProfileByUserId } from "@/lib/profiles/queries";
 import { newId } from "@/lib/utils/id";
 import {
   getProduct,
+  computeListingPublishPriceCzk,
   type ProductKind,
 } from "@/lib/payments/products";
+import { countPublishedListings } from "@/lib/listings/queries";
 import { getStripe, isStripeConfigured } from "@/lib/payments/stripe";
 import {
   generateUniqueVariableSymbol,
@@ -26,6 +28,23 @@ async function ownListing(listingId: string, profileId: string) {
     .where(and(eq(listings.id, listingId), eq(listings.profileId, profileId)))
     .limit(1);
   return rows[0] ?? null;
+}
+
+async function resolveAmountCzk(
+  product: ProductKind,
+  profile: { id: string; type: "employer" | "professional" | string },
+): Promise<number> {
+  if (product !== "listing_publish") {
+    return getProduct(product).priceCzk;
+  }
+  if (profile.type !== "employer" && profile.type !== "professional") {
+    throw new Error("Neznámý typ profilu pro pricing.");
+  }
+  const publishedCount = await countPublishedListings(profile.id);
+  return computeListingPublishPriceCzk({
+    profileType: profile.type as "employer" | "professional",
+    alreadyPublishedCount: publishedCount,
+  });
 }
 
 export type StartCheckoutResult =
@@ -47,16 +66,17 @@ export async function startStripeCheckoutAction(input: {
     };
   }
   const product = getProduct(input.product);
-  if (product.priceCzk <= 0) {
-    return { ok: false, error: "Tento produkt je zdarma." };
-  }
-
   const profile = await getProfileByUserId(session.user.id);
   if (!profile) return { ok: false, error: "Vytvoř si nejprve profil." };
 
   if (input.listingId) {
     const owned = await ownListing(input.listingId, profile.id);
     if (!owned) return { ok: false, error: "Inzerát nepatří tobě." };
+  }
+
+  const amountCzk = await resolveAmountCzk(input.product, profile);
+  if (amountCzk <= 0) {
+    return { ok: false, error: "Tento produkt je zdarma." };
   }
 
   const paymentId = newId();
@@ -67,7 +87,7 @@ export async function startStripeCheckoutAction(input: {
     product: input.product,
     provider: "stripe",
     status: "pending",
-    amountCzk: product.priceCzk,
+    amountCzk,
     metadata: { productName: product.name },
   });
 
@@ -80,7 +100,7 @@ export async function startStripeCheckoutAction(input: {
       {
         price_data: {
           currency: "czk",
-          unit_amount: product.priceCzk * 100,
+          unit_amount: amountCzk * 100,
           product_data: {
             name: product.name,
             description: product.description,
@@ -127,15 +147,17 @@ export async function startFioPaymentAction(input: {
     return { ok: false, error: "Pro platbu si nejdřív ověř e-mail." };
   }
   const product = getProduct(input.product);
-  if (product.priceCzk <= 0) {
-    return { ok: false, error: "Tento produkt je zdarma." };
-  }
   const profile = await getProfileByUserId(session.user.id);
   if (!profile) return { ok: false, error: "Vytvoř si nejprve profil." };
 
   if (input.listingId) {
     const owned = await ownListing(input.listingId, profile.id);
     if (!owned) return { ok: false, error: "Inzerát nepatří tobě." };
+  }
+
+  const amountCzk = await resolveAmountCzk(input.product, profile);
+  if (amountCzk <= 0) {
+    return { ok: false, error: "Tento produkt je zdarma." };
   }
 
   const variableSymbol = await generateUniqueVariableSymbol();
@@ -147,7 +169,7 @@ export async function startFioPaymentAction(input: {
     product: input.product,
     provider: "fio",
     status: "pending",
-    amountCzk: product.priceCzk,
+    amountCzk,
     variableSymbol,
     metadata: { productName: product.name },
   });

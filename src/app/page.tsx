@@ -5,8 +5,8 @@ import { Eyebrow, Pill } from "@/components/ui/eyebrow";
 
 const ROLES_TICKER = [
   "Učitel autoškoly",
-  "Mistr odborného výcviku",
   "Lektor § 48",
+  "Soudní tlumočník",
   "Provozní / admin",
   "Zdravotník",
   "Manažer autoškoly",
@@ -96,16 +96,16 @@ export default async function Home({
                 </span>
               </div>
               <h3 className="display-xs mt-3 text-xl text-[var(--color-ink)] sm:text-2xl">
-                Hledáme učitele B + C, plný úvazek, Brno-střed
+                Ukázka doporučení — takhle vypadá shoda v praxi
               </h3>
               <p className="mt-1.5 text-sm text-[var(--color-ink-muted)]">
-                Autoškola Příklad s.r.o. · Brno · ověřeno z ARES
+                Autoškola ověřená přes ARES · krajská shoda · sedí role i kategorie
               </p>
               <div className="mt-5 flex flex-wrap gap-1.5">
                 {[
-                  "Role: Učitel autoškoly",
-                  "Kategorie ŘP: B, C",
-                  "Stejný kraj — Jihomoravský",
+                  "Role sedí",
+                  "Kategorie ŘP se kryjí",
+                  "Stejný kraj",
                   "Sazby se překrývají",
                 ].map((reason) => (
                   <span
@@ -146,7 +146,7 @@ export default async function Home({
       <section className="relative bg-[var(--color-canvas)]">
         <div className="mx-auto w-full max-w-6xl px-6 py-20 sm:py-28">
           <div className="mx-auto max-w-3xl text-center">
-            <Eyebrow>Proč my, ne jobs.cz</Eyebrow>
+            <Eyebrow>Proč specializované tržiště</Eyebrow>
             <h2 className="display-md mt-3 text-4xl text-[var(--color-ink)] sm:text-5xl md:text-6xl">
               Generický job board nestačí.
               <br />
@@ -175,13 +175,13 @@ export default async function Home({
                 <div className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-canvas)] p-3">
                   <p className="font-semibold text-[var(--color-ink-muted)]">Autoškola</p>
                   <p className="mt-1 text-[var(--color-ink-soft)]">
-                    „Hledáme učitele B+C, plný úvazek, Brno“
+                    Hledáme do týmu — definuj role, kategorie ŘP a lokalitu.
                   </p>
                 </div>
                 <div className="rounded-2xl border border-[var(--color-line)] bg-[var(--color-canvas)] p-3">
                   <p className="font-semibold text-[var(--color-ink-muted)]">Profesionál</p>
                   <p className="mt-1 text-[var(--color-ink-soft)]">
-                    „Hledám místo: instruktor B, dojezd 30 km od Brna“
+                    Hledám místo — co umíš, kam dojedeš, za jakou sazbu.
                   </p>
                 </div>
               </div>
@@ -288,9 +288,9 @@ export default async function Home({
           <div className="mt-16 grid grid-cols-2 gap-6 border-t border-white/10 pt-10 sm:grid-cols-4">
             {[
               { v: "30+", l: "měst v ČR" },
-              { v: "7", l: "rolí oboru" },
+              { v: "6", l: "rolí oboru" },
               { v: "120+", l: "specializovaných stránek" },
-              { v: "590 Kč", l: "za inzerát · první zdarma" },
+              { v: "3 zdarma", l: "pak 299 / 790 Kč za inzerát" },
             ].map((s) => (
               <div key={s.l}>
                 <p className="display-md text-4xl text-white tabular-nums sm:text-5xl">
@@ -358,7 +358,7 @@ export default async function Home({
                 </em>
               </h2>
               <p className="mt-4 text-base leading-relaxed text-[var(--color-ink-muted)] sm:text-lg">
-                První inzerát zdarma — zaplatíš až další. Žádné předplatné, žádný spam.
+                První tři inzeráty zdarma — zaplatíš až další. Žádné předplatné, žádný spam.
               </p>
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
                 {session ? (

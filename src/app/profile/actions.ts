@@ -40,11 +40,13 @@ const optionalUrl = z
 
 const RoleSchema = z.enum([
   "instructor",
-  "master_practice",
+  "examiner",
   "operator_admin",
   "lecturer_48",
   "manager",
   "medic",
+  "court_interpreter",
+  "other",
 ]);
 const LicenseSchema = z.enum([
   "AM", "A1", "A2", "A",

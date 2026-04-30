@@ -32,7 +32,20 @@ export async function applyPaymentEffect(input: {
     }
 
     case "listing_publish": {
-      // Aktuálně zdarma, takže žádný efekt.
+      if (!input.listingId) {
+        console.warn("[payment] listing_publish bez listingId — skip");
+        return;
+      }
+      const ninetyDays = new Date(now.getTime() + (product.validityDays ?? 90) * 24 * 60 * 60 * 1000);
+      await db
+        .update(listings)
+        .set({
+          status: "active",
+          publishedAt: now,
+          expiresAt: ninetyDays,
+          updatedAt: now,
+        })
+        .where(eq(listings.id, input.listingId));
       return;
     }
 

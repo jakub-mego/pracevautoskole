@@ -122,6 +122,23 @@ export type PublicListFilters = {
   perPage?: number;
 };
 
+/**
+ * Počet inzerátů, které profil už zveřejnil (publishedAt != null).
+ * Slouží pro počítání free quoty (první 3 inzeráty zdarma).
+ */
+export async function countPublishedListings(profileId: string): Promise<number> {
+  const [row] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(listings)
+    .where(
+      and(
+        eq(listings.profileId, profileId),
+        sql`${listings.publishedAt} is not null`,
+      ),
+    );
+  return row?.count ?? 0;
+}
+
 export async function getListingStatsForProfile(profileId: string) {
   const [active] = await db
     .select({ count: sql<number>`count(*)::int` })

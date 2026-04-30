@@ -19,13 +19,23 @@ export type Product = {
   validityDays?: number;
 };
 
+/** Limit free inzerátů na profil. Nad limit se účtuje. */
+export const FREE_LISTING_QUOTA = 3;
+
+/** Cena za zveřejnění dalšího inzerátu nad rámec free quoty (autoškola). */
+export const LISTING_PUBLISH_PRICE_EMPLOYER_CZK = 790;
+/** Cena za zveřejnění dalšího inzerátu nad rámec free quoty (profesionál). */
+export const LISTING_PUBLISH_PRICE_PROFESSIONAL_CZK = 299;
+
 export const PRODUCTS: Record<ProductKind, Product> = {
   listing_publish: {
     kind: "listing_publish",
     name: "Publikace inzerátu",
     description: "Zveřejnění jednoho inzerátu na 90 dní.",
-    priceCzk: 0,
-    hidden: true, // aktuálně zdarma
+    // Cena se počítá dynamicky podle profilu a počtu předchozích inzerátů
+    // (computeListingPublishPriceCzk). Tahle hodnota je pouze fallback.
+    priceCzk: LISTING_PUBLISH_PRICE_EMPLOYER_CZK,
+    hidden: true,
     validityDays: 90,
   },
   listing_boost: {
@@ -61,4 +71,18 @@ export function getProduct(kind: ProductKind): Product {
 
 export function listVisibleProducts(): Product[] {
   return Object.values(PRODUCTS).filter((p) => !p.hidden);
+}
+
+/**
+ * Cena za zveřejnění *dalšího* inzerátu pro daný typ profilu.
+ * V free quotě (FREE_LISTING_QUOTA) vrací 0.
+ */
+export function computeListingPublishPriceCzk(args: {
+  profileType: "employer" | "professional";
+  alreadyPublishedCount: number;
+}): number {
+  if (args.alreadyPublishedCount < FREE_LISTING_QUOTA) return 0;
+  return args.profileType === "employer"
+    ? LISTING_PUBLISH_PRICE_EMPLOYER_CZK
+    : LISTING_PUBLISH_PRICE_PROFESSIONAL_CZK;
 }

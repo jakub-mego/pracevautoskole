@@ -28,6 +28,11 @@ const CARDS = [
     title: "Soudní tlumočník",
     hint: "Tlumočím u zkoušek z odborné způsobilosti.",
   },
+  {
+    href: "/onboarding/other-worker",
+    title: "Jiný pracovník",
+    hint: "Admin, zdravotník nebo jiná role v autoškole — upřesníš v profilu.",
+  },
 ];
 
 export default async function OnboardingPage() {
