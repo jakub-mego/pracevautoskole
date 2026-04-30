@@ -7,7 +7,36 @@ import {
   resetPasswordEmail,
 } from "@/lib/email/templates";
 
+const baseURL =
+  process.env.BETTER_AUTH_URL ??
+  process.env.NEXT_PUBLIC_APP_URL ??
+  "http://localhost:3000";
+
+function buildTrustedOrigins(): string[] {
+  const origins = new Set<string>();
+  for (const raw of [baseURL, process.env.NEXT_PUBLIC_APP_URL]) {
+    if (!raw) continue;
+    try {
+      const u = new URL(raw);
+      origins.add(u.origin);
+      if (u.hostname === "localhost") {
+        origins.add(`${u.protocol}//127.0.0.1${u.port ? `:${u.port}` : ""}`);
+      } else if (u.hostname === "127.0.0.1") {
+        origins.add(`${u.protocol}//localhost${u.port ? `:${u.port}` : ""}`);
+      }
+    } catch {}
+  }
+  const extra = process.env.BETTER_AUTH_TRUSTED_ORIGINS;
+  if (extra) {
+    for (const item of extra.split(",").map((s) => s.trim()).filter(Boolean)) {
+      origins.add(item);
+    }
+  }
+  return [...origins];
+}
+
 export const auth = betterAuth({
+  baseURL,
   database: drizzleAdapter(db, {
     provider: "pg",
     usePlural: true,
@@ -33,7 +62,7 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 30,
     updateAge: 60 * 60 * 24,
   },
-  trustedOrigins: [process.env.BETTER_AUTH_URL ?? "http://localhost:3000"],
+  trustedOrigins: buildTrustedOrigins(),
   secret: process.env.BETTER_AUTH_SECRET,
 });
 

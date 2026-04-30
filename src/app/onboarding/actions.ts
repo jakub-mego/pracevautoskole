@@ -15,6 +15,7 @@ import {
   professionalProfiles,
   professionalRoles,
   professionalLicenses,
+  courtInterpreterProfiles,
 } from "../../../drizzle/schema";
 
 const IcoSchema = z.string().trim().regex(/^\d{8}$/, "IČO musí mít 8 číslic.");
@@ -26,6 +27,7 @@ const ProfessionalRoleSchema = z.enum([
   "lecturer_48",
   "manager",
   "medic",
+  "court_interpreter",
 ]);
 
 const LicenseCategorySchema = z.enum([
@@ -182,6 +184,103 @@ export async function createProfessionalProfileAction(
           licenses.map((category) => ({ id: newId(), profileId, category })),
         );
       }
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Vytvoření profilu selhalo.";
+    return { error: message };
+  }
+
+  redirect("/dashboard");
+}
+
+const PriceSchema = z.coerce
+  .number()
+  .int("Zadej celé číslo v Kč.")
+  .min(0, "Cena nemůže být záporná.")
+  .max(1_000_000, "Cena je mimo realistický rozsah.")
+  .optional();
+
+function splitListInput(raw: FormDataEntryValue | null, max: number): string[] {
+  if (raw == null) return [];
+  return String(raw)
+    .split(/[,\n;]+/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, max);
+}
+
+const CourtInterpreterInputSchema = z.object({
+  displayName: z.string().trim().min(2, "Zadej jméno min. 2 znaky.").max(120),
+  city: z.string().trim().max(80).optional().or(z.literal("")),
+  region: z.string().trim().max(80).optional().or(z.literal("")),
+  testTranslationPriceCzk: PriceSchema,
+  examTranslationPriceCzk: PriceSchema,
+  languages: z.array(z.string().trim().min(1).max(60)).min(1, "Přidej alespoň jeden jazyk."),
+  cities: z.array(z.string().trim().min(1).max(80)).min(1, "Přidej alespoň jedno město působnosti."),
+});
+
+export async function createCourtInterpreterProfileAction(
+  _prev: FormActionState,
+  formData: FormData,
+): Promise<FormActionState> {
+  const session = await requireSession();
+  const userId = session.user.id;
+
+  const existing = await getProfileByUserId(userId);
+  if (existing) redirect("/dashboard");
+
+  const parsed = CourtInterpreterInputSchema.safeParse({
+    displayName: formData.get("displayName"),
+    city: formData.get("city") ?? "",
+    region: formData.get("region") ?? "",
+    testTranslationPriceCzk: formData.get("testTranslationPriceCzk") || undefined,
+    examTranslationPriceCzk: formData.get("examTranslationPriceCzk") || undefined,
+    languages: splitListInput(formData.get("languages"), 30),
+    cities: splitListInput(formData.get("cities"), 50),
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Neplatná data." };
+  }
+  const {
+    displayName,
+    city,
+    region,
+    testTranslationPriceCzk,
+    examTranslationPriceCzk,
+    languages,
+    cities,
+  } = parsed.data;
+
+  const profileId = newId();
+  const slug = uniqueSlug(displayName);
+
+  try {
+    await db.transaction(async (tx) => {
+      await tx.insert(profiles).values({
+        id: profileId,
+        userId,
+        type: "professional",
+        slug,
+        displayName,
+        city: city || null,
+        region: region || null,
+      });
+      await tx.insert(professionalProfiles).values({
+        profileId,
+        anonymous: false,
+      });
+      await tx.insert(professionalRoles).values({
+        id: newId(),
+        profileId,
+        role: "court_interpreter",
+      });
+      await tx.insert(courtInterpreterProfiles).values({
+        profileId,
+        testTranslationPriceCzk: testTranslationPriceCzk ?? null,
+        examTranslationPriceCzk: examTranslationPriceCzk ?? null,
+        languages,
+        cities,
+      });
     });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Vytvoření profilu selhalo.";

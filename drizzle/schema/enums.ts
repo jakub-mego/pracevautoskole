@@ -18,6 +18,7 @@ export const professionalRoleEnum = pgEnum("professional_role", [
   "lecturer_48",
   "manager",
   "medic",
+  "court_interpreter",
 ]);
 
 export const licenseCategoryEnum = pgEnum("license_category", [

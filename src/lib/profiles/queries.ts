@@ -7,6 +7,7 @@ import {
   professionalProfiles,
   professionalRoles,
   professionalLicenses,
+  courtInterpreterProfiles,
 } from "../../../drizzle/schema";
 
 export async function getProfileByUserId(userId: string) {
@@ -53,6 +54,23 @@ export async function getFullProfileByUserId(userId: string) {
     roles: rolesRows.map((r) => r.role),
     licenses: licensesRows.map((l) => l.category),
   };
+}
+
+export async function getProfessionalRolesByProfileId(profileId: string) {
+  const rows = await db
+    .select({ role: professionalRoles.role })
+    .from(professionalRoles)
+    .where(eq(professionalRoles.profileId, profileId));
+  return rows.map((r) => r.role);
+}
+
+export async function getCourtInterpreterProfileByProfileId(profileId: string) {
+  const rows = await db
+    .select()
+    .from(courtInterpreterProfiles)
+    .where(eq(courtInterpreterProfiles.profileId, profileId))
+    .limit(1);
+  return rows[0] ?? null;
 }
 
 export async function getProfessionalVerificationByProfileId(profileId: string) {

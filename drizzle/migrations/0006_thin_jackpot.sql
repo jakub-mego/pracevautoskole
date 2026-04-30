@@ -1,0 +1,1 @@
+ALTER TYPE "public"."professional_role" ADD VALUE 'court_interpreter';

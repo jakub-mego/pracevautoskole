@@ -104,3 +104,15 @@ export const professionalLicenses = pgTable(
   },
   (t) => [uniqueIndex("professional_license_uq").on(t.profileId, t.category)],
 );
+
+export const courtInterpreterProfiles = pgTable("court_interpreter_profiles", {
+  profileId: text("profile_id")
+    .primaryKey()
+    .references(() => profiles.id, { onDelete: "cascade" }),
+  testTranslationPriceCzk: integer("test_translation_price_czk"),
+  examTranslationPriceCzk: integer("exam_translation_price_czk"),
+  languages: text("languages").array().notNull().default([]),
+  cities: text("cities").array().notNull().default([]),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});

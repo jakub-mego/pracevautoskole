@@ -4,14 +4,21 @@ import { useActionState } from "react";
 import { createProfessionalProfileAction } from "@/app/onboarding/actions";
 import {
   PROFESSIONAL_ROLE_LABELS,
+  type ProfessionalRoleKey,
   LICENSE_CATEGORIES,
 } from "@/lib/profiles/labels";
 
-export function ProfessionalOnboardingForm() {
+type Props = {
+  defaultRoles?: ProfessionalRoleKey[];
+};
+
+export function ProfessionalOnboardingForm({ defaultRoles }: Props = {}) {
   const [state, formAction, pending] = useActionState(
     createProfessionalProfileAction,
     undefined,
   );
+
+  const lockedRoles = defaultRoles && defaultRoles.length > 0 ? defaultRoles : null;
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
@@ -46,19 +53,41 @@ export function ProfessionalOnboardingForm() {
         </label>
       </div>
 
-      <fieldset className="flex flex-col gap-2">
-        <legend className="text-sm font-medium text-[var(--color-ink-muted)]">
-          Co děláš (vyber alespoň jedno)
-        </legend>
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {Object.entries(PROFESSIONAL_ROLE_LABELS).map(([value, label]) => (
-            <label key={value} className="flex items-center gap-2 text-sm text-[var(--color-ink)]">
-              <input type="checkbox" name="roles" value={value} />
-              {label}
-            </label>
+      {lockedRoles ? (
+        <div className="flex flex-col gap-2">
+          <span className="text-sm font-medium text-[var(--color-ink-muted)]">Tvoje role</span>
+          <div className="flex flex-wrap gap-2">
+            {lockedRoles.map((role) => (
+              <span
+                key={role}
+                className="rounded-full border border-[var(--color-brand-700)] bg-[var(--color-brand-50)] px-3 py-1 text-xs font-medium text-[var(--color-brand-800)]"
+              >
+                {PROFESSIONAL_ROLE_LABELS[role]}
+              </span>
+            ))}
+          </div>
+          {lockedRoles.map((role) => (
+            <input key={role} type="hidden" name="roles" value={role} />
           ))}
+          <p className="text-xs text-[var(--color-ink-soft)]">
+            Další role půjde přidat později v profilu.
+          </p>
         </div>
-      </fieldset>
+      ) : (
+        <fieldset className="flex flex-col gap-2">
+          <legend className="text-sm font-medium text-[var(--color-ink-muted)]">
+            Co děláš (vyber alespoň jedno)
+          </legend>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {Object.entries(PROFESSIONAL_ROLE_LABELS).map(([value, label]) => (
+              <label key={value} className="flex items-center gap-2 text-sm text-[var(--color-ink)]">
+                <input type="checkbox" name="roles" value={value} />
+                {label}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      )}
 
       <fieldset className="flex flex-col gap-2">
         <legend className="text-sm font-medium text-[var(--color-ink-muted)]">

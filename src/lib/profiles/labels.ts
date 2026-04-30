@@ -5,6 +5,7 @@ export const PROFESSIONAL_ROLE_LABELS = {
   lecturer_48: "Lektor 48hod. školení",
   manager: "Vedoucí / manažer",
   medic: "Lektor zdravotní přípravy",
+  court_interpreter: "Soudní tlumočník",
 } as const;
 
 export type ProfessionalRoleKey = keyof typeof PROFESSIONAL_ROLE_LABELS;

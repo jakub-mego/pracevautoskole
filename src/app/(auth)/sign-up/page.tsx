@@ -23,8 +23,8 @@ export default async function SignUpPage() {
         </em>
       </h1>
       <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-muted)]">
-        Stačí e-mail a heslo (min. 10 znaků). Po ověření e-mailu si vybereš,
-        zda jsi autoškola nebo profesionál oboru.
+        Vyber, kdo jsi, a založ účet — pak rovnou doplníš jen to, co ke své
+        roli potřebuješ.
       </p>
       <div className="mt-6">
         <SignUpForm />
