@@ -5,7 +5,6 @@ import { listActiveListingsByProfile } from "@/lib/listings/queries";
 import { getSession } from "@/lib/auth/server";
 import { PROFESSIONAL_ROLE_LABELS } from "@/lib/profiles/labels";
 import { AresVerifiedBadge } from "@/components/listings/ares-verified-badge";
-import { VerifiedProfessionalBadge } from "@/components/profiles/verified-professional-badge";
 import { MessageButton } from "@/components/messaging/message-button";
 import { ReportDialog } from "@/components/reports/report-dialog";
 import { getProfileByUserId } from "@/lib/profiles/queries";
@@ -49,10 +48,6 @@ export default async function PublicProfilePage({
         {profile.displayName}
         {profile.type === "employer" && employer?.aresVerifiedAt ? (
           <AresVerifiedBadge size="md" />
-        ) : null}
-        {profile.type === "professional" &&
-        professional?.credentialsVerification === "verified" ? (
-          <VerifiedProfessionalBadge size="md" />
         ) : null}
       </h1>
       {cityRegion ? <p className="mt-1 text-[var(--color-ink-muted)]">{cityRegion}</p> : null}

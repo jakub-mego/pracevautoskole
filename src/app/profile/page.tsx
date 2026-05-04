@@ -4,7 +4,6 @@ import { requireSession } from "@/lib/auth/server";
 import { getFullProfileByUserId } from "@/lib/profiles/queries";
 import { EmployerProfileForm } from "@/components/forms/employer-profile-form";
 import { ProfessionalProfileForm } from "@/components/forms/professional-profile-form";
-import { CredentialsUpload } from "@/components/forms/credentials-upload";
 import { DeleteAccountDialog } from "@/components/forms/delete-account-dialog";
 
 export const metadata = {
@@ -62,25 +61,6 @@ export default async function ProfilePage() {
           />
         ) : null}
       </div>
-
-      {profile.type === "professional" && professional ? (
-        <section className="mt-10 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6">
-          <h2 className="display-xs text-base text-[var(--color-ink)]">
-            Ověření profesní způsobilosti
-          </h2>
-          <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
-            Soubor uvidí jen administrátor pro manuální kontrolu. Po schválení
-            získáš odznak „Ověřený profesionál“ na profilu i u inzerátů.
-          </p>
-          <div className="mt-5">
-            <CredentialsUpload
-              status={professional.credentialsVerification}
-              uploadedAt={professional.credentialsUploadedAt}
-              rejectionReason={professional.credentialsRejectionReason}
-            />
-          </div>
-        </section>
-      ) : null}
 
       <section className="mt-10 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6">
         <h2 className="display-xs text-base text-[var(--color-ink)]">Tvoje data (GDPR)</h2>

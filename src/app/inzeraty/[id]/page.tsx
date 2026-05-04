@@ -6,7 +6,6 @@ import { getSession } from "@/lib/auth/server";
 import { PROFESSIONAL_ROLE_LABELS } from "@/lib/profiles/labels";
 import { EMPLOYMENT_TYPE_OPTIONS } from "@/lib/listings/labels";
 import { AresVerifiedBadge } from "@/components/listings/ares-verified-badge";
-import { VerifiedProfessionalBadge } from "@/components/profiles/verified-professional-badge";
 import { MessageButton } from "@/components/messaging/message-button";
 import { ReportDialog } from "@/components/reports/report-dialog";
 import { getProfileByUserId } from "@/lib/profiles/queries";
@@ -46,7 +45,6 @@ export default async function PublicListingPage({
     licenses,
     anonymous,
     aresVerified,
-    professionalVerified,
   } = data;
   const session = await getSession();
   const contact = session ? await getProfileContact(profile.id) : null;
@@ -99,7 +97,6 @@ export default async function PublicListingPage({
               </Link>
             )}
             {aresVerified ? <AresVerifiedBadge size="md" /> : null}
-            {professionalVerified ? <VerifiedProfessionalBadge size="md" /> : null}
             {cityRegion ? (
               <span className="text-[var(--color-ink-soft)]">· {cityRegion}</span>
             ) : null}

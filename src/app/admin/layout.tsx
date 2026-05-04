@@ -34,12 +34,6 @@ export default async function AdminLayout({
             Inzeráty
           </Link>
           <Link
-            href="/admin/verifikace"
-            className="rounded-md px-2 py-1 hover:bg-[var(--color-canvas-muted)]"
-          >
-            Verifikace
-          </Link>
-          <Link
             href="/admin/reports"
             className="rounded-md px-2 py-1 hover:bg-[var(--color-canvas-muted)]"
           >

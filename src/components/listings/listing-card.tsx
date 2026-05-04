@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { profiles, listings } from "../../../drizzle/schema";
 import { AresVerifiedBadge } from "./ares-verified-badge";
-import { VerifiedProfessionalBadge } from "@/components/profiles/verified-professional-badge";
 
 type Listing = typeof listings.$inferSelect;
 type Profile = typeof profiles.$inferSelect;
@@ -11,13 +10,11 @@ export function ListingCard({
   profile,
   anonymous = false,
   aresVerified = false,
-  professionalVerified = false,
 }: {
   listing: Listing;
   profile: Profile;
   anonymous?: boolean;
   aresVerified?: boolean;
-  professionalVerified?: boolean;
 }) {
   const cityRegion = [listing.city, listing.region].filter(Boolean).join(" · ");
   return (
@@ -48,7 +45,6 @@ export function ListingCard({
           </Link>
         )}
         {aresVerified ? <AresVerifiedBadge /> : null}
-        {professionalVerified ? <VerifiedProfessionalBadge /> : null}
         {cityRegion ? (
           <span className="text-[var(--color-ink-soft)]">· {cityRegion}</span>
         ) : null}

@@ -6,11 +6,6 @@ export default async function AdminDashboard() {
     { label: "Uživatelé", value: stats.users, hint: `${stats.unverified} neověřených` },
     { label: "Aktivní inzeráty", value: stats.listingsActive },
     { label: "Otevřené reporty", value: stats.reportsOpen },
-    {
-      label: "Verifikace průkazů",
-      value: stats.pendingCredentials,
-      hint: "ke schválení",
-    },
     { label: "Platby (zaplaceno)", value: stats.paymentsPaid },
     { label: "Tržby (Kč)", value: stats.revenueCzk.toLocaleString("cs-CZ") },
   ];

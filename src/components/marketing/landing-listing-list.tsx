@@ -40,7 +40,6 @@ export function LandingListingList({
           profile={r.profile}
           anonymous={r.anonymous ?? false}
           aresVerified={Boolean(r.aresVerifiedAt)}
-          professionalVerified={r.professionalVerification === "verified"}
         />
       ))}
     </ul>

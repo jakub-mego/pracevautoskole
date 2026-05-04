@@ -95,9 +95,9 @@ export default async function ComingSoonPage({
           <div className="mt-14 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-xs text-[var(--color-ink-soft)]">
             {[
               "Ověření přes ARES",
-              "Ruční verifikace průkazů",
               "Matching dle ŘP a dojezdu",
-              "První inzerát zdarma",
+              "3 inzeráty zdarma",
+              "Bez předplatného",
             ].map((label) => (
               <span key={label} className="flex items-center gap-1.5">
                 <Tick />

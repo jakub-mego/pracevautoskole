@@ -154,7 +154,6 @@ export default async function PublicListingsFeed({
                 profile,
                 anonymous,
                 aresVerifiedAt,
-                professionalVerification,
               }) => (
                 <ListingCard
                   key={listing.id}
@@ -162,7 +161,6 @@ export default async function PublicListingsFeed({
                   profile={profile}
                   anonymous={anonymous ?? false}
                   aresVerified={Boolean(aresVerifiedAt)}
-                  professionalVerified={professionalVerification === "verified"}
                 />
               ),
             )}

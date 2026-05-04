@@ -176,18 +176,16 @@ export default async function Home({
                 <Shield />
               </span>
               <h3 className="display-xs text-xl text-[var(--color-ink)] sm:text-2xl">
-                Ověřená důvěra
+                Ověřené autoškoly
               </h3>
               <p className="text-sm leading-relaxed text-[var(--color-ink-muted)]">
-                Autoškoly přes ARES (IČO + obchodní rejstřík). Profesionálové ručně přes
-                nahraný profesní průkaz.
+                Každá autoškola se při registraci ověří přes ARES — IČO,
+                obchodní jméno a sídlo z veřejného rejstříku. Inzeráty nikdy
+                neztrácí kontext právního subjektu.
               </p>
               <div className="mt-1 flex flex-wrap gap-2">
                 <Pill variant="brand">
                   <Tick small /> Ověřeno z ARES
-                </Pill>
-                <Pill variant="info">
-                  <Tick small /> Ověřený profesionál
                 </Pill>
               </div>
             </article>
