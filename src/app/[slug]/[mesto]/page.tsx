@@ -43,19 +43,19 @@ export default async function LandingComboPage({
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
       <nav className="text-sm text-[var(--color-ink-muted)]">
-        <Link href="/prace-v-autoskole" className="hover:text-[var(--color-ink)]">
-          Práce v autoškole
+        <Link href="/profese" className="hover:text-[var(--color-ink)]">
+          Profese
         </Link>
         {" · "}
         <Link
-          href={`/prace-v-autoskole/${r.slug}`}
+          href={`/${r.slug}`}
           className="hover:text-[var(--color-ink)]"
         >
           {r.name}
         </Link>
         {" · "}
         <Link
-          href={`/prace-v-autoskole/${c.slug}`}
+          href={`/${c.slug}`}
           className="hover:text-[var(--color-ink)]"
         >
           {c.name}
@@ -77,7 +77,7 @@ export default async function LandingComboPage({
       <p className="mt-4 max-w-2xl text-sm text-[var(--color-ink-muted)]">
         Detail profese, kvalifikace a orientační odměna na samostatné stránce{" "}
         <Link
-          href={`/prace-v-autoskole/${r.slug}`}
+          href={`/${r.slug}`}
           className="font-medium text-[var(--color-brand-700)] underline-offset-2 hover:underline"
         >
           {r.name} — celostátní přehled
@@ -106,7 +106,7 @@ export default async function LandingComboPage({
             {SEO_ROLES.filter((x) => x.slug !== r.slug).map((x) => (
               <li key={x.slug}>
                 <Link
-                  href={`/prace-v-autoskole/${x.slug}/${c.slug}`}
+                  href={`/${x.slug}/${c.slug}`}
                   className="text-sm text-[var(--color-ink-muted)] underline hover:text-[var(--color-ink)]"
                 >
                   {x.name} {c.name}
@@ -125,7 +125,7 @@ export default async function LandingComboPage({
               .map((x) => (
                 <li key={x.slug}>
                   <Link
-                    href={`/prace-v-autoskole/${r.slug}/${x.slug}`}
+                    href={`/${r.slug}/${x.slug}`}
                     className="text-sm text-[var(--color-ink-muted)] underline hover:text-[var(--color-ink)]"
                   >
                     {x.name}

@@ -39,6 +39,25 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/prace-v-autoskole",
+        destination: "/profese",
+        permanent: true,
+      },
+      {
+        source: "/prace-v-autoskole/:slug",
+        destination: "/:slug",
+        permanent: true,
+      },
+      {
+        source: "/prace-v-autoskole/:slug/:mesto",
+        destination: "/:slug/:mesto",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

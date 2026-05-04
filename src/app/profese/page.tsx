@@ -28,7 +28,7 @@ export default function LandingHubPage() {
               className="rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)] p-4"
             >
               <Link
-                href={`/prace-v-autoskole/${r.slug}`}
+                href={`/${r.slug}`}
                 className="text-base font-semibold text-[var(--color-ink)] hover:underline"
               >
                 {r.name}
@@ -45,7 +45,7 @@ export default function LandingHubPage() {
           {SEO_CITIES.map((c) => (
             <li key={c.slug}>
               <Link
-                href={`/prace-v-autoskole/${c.slug}`}
+                href={`/${c.slug}`}
                 className="text-sm text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] hover:underline"
               >
                 {c.name}

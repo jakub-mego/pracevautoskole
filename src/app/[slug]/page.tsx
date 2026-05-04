@@ -168,7 +168,7 @@ export default async function LandingSlugPage({
             {SEO_ROLES.map((r) => (
               <li key={r.slug}>
                 <Link
-                  href={`/prace-v-autoskole/${r.slug}/${city.slug}`}
+                  href={`/${r.slug}/${city.slug}`}
                   className="text-sm text-[var(--color-ink-muted)] underline hover:text-[var(--color-ink)]"
                 >
                   {r.name} v {city.name}
@@ -305,7 +305,7 @@ export default async function LandingSlugPage({
           {SEO_CITIES.map((c) => (
             <li key={c.slug}>
               <Link
-                href={`/prace-v-autoskole/${r.slug}/${c.slug}`}
+                href={`/${r.slug}/${c.slug}`}
                 className="text-sm text-[var(--color-ink-muted)] underline hover:text-[var(--color-ink)]"
               >
                 {r.name} v {c.name}
@@ -325,7 +325,7 @@ export default async function LandingSlugPage({
               return (
                 <li key={relSlug}>
                   <Link
-                    href={`/prace-v-autoskole/${rel.slug}`}
+                    href={`/${rel.slug}`}
                     className="text-sm font-medium text-[var(--color-brand-700)] underline-offset-2 hover:underline"
                   >
                     {rel.name} →

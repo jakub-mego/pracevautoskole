@@ -39,10 +39,10 @@ export function SiteFooter() {
             Inzeráty
           </Link>
           <Link
-            href="/prace-v-autoskole"
+            href="/profese"
             className="text-[var(--color-ink-muted)] transition hover:text-[var(--color-brand-700)]"
           >
-            Práce dle města a role
+            Profese a města
           </Link>
           <Link
             href="/blog"

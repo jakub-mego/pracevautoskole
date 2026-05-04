@@ -277,7 +277,7 @@ export default async function Home({
               </h2>
             </div>
             <Link
-              href="/prace-v-autoskole"
+              href="/profese"
               className="text-sm font-medium text-[var(--color-brand-700)] hover:underline"
             >
               Všechna města a role →
@@ -288,7 +288,7 @@ export default async function Home({
             {TOP_CITIES.map((c) => (
               <Link
                 key={c.slug}
-                href={`/prace-v-autoskole/${c.slug}`}
+                href={`/${c.slug}`}
                 className="group flex flex-col gap-1 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-5 transition hover:-translate-y-0.5 hover:border-[var(--color-brand-700)] hover:shadow-[var(--shadow-card-hover)]"
               >
                 <span className="display-xs text-base text-[var(--color-ink)]">

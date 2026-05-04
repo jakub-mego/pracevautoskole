@@ -33,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${SITE}/prace-v-autoskole`,
+      url: `${SITE}/profese`,
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 0.85,
@@ -63,19 +63,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     })),
     ...cities.map((c) => ({
-      url: `${SITE}/prace-v-autoskole/${c.slug}`,
+      url: `${SITE}/${c.slug}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.7,
     })),
     ...roles.map((r) => ({
-      url: `${SITE}/prace-v-autoskole/${r.slug}`,
+      url: `${SITE}/${r.slug}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.7,
     })),
     ...combos.map((c) => ({
-      url: `${SITE}/prace-v-autoskole/${c.roleSlug}/${c.mestoSlug}`,
+      url: `${SITE}/${c.roleSlug}/${c.mestoSlug}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: 0.6,

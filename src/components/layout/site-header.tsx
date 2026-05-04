@@ -26,7 +26,7 @@ export async function SiteHeader() {
 
         <nav className="flex items-center gap-1 text-sm">
           <NavLink href="/inzeraty">Inzeráty</NavLink>
-          <NavLink href="/prace-v-autoskole">Práce dle města</NavLink>
+          <NavLink href="/profese">Profese a města</NavLink>
           {session ? (
             <>
               <NavLink href="/listings">Moje inzeráty</NavLink>
