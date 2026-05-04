@@ -86,7 +86,7 @@ export default function Article() {
       <p>
         Začínáme malí a budeme to stavět spolu s vámi. Jakákoli zpětná vazba je
         cenná — pište na{" "}
-        <a href="mailto:kontakt@pracevautoskole.cz">kontakt@pracevautoskole.cz</a>.
+        <a href="mailto:info@onlymego.cz">info@onlymego.cz</a>.
       </p>
     </>
   );

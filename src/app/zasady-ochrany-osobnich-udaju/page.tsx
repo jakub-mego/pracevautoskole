@@ -212,10 +212,10 @@ export default function PrivacyPage() {
             <strong>Právo na omezení zpracování</strong> a{" "}
             <strong>právo vznést námitku</strong> — pošli e-mail na{" "}
             <a
-              href="mailto:kontakt@pracevautoskole.cz"
+              href="mailto:info@onlymego.cz"
               className="font-medium text-[var(--color-ink)] underline"
             >
-              kontakt@pracevautoskole.cz
+              info@onlymego.cz
             </a>
             .
           </li>
