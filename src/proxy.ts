@@ -4,6 +4,7 @@ const PREVIEW_COOKIE = "pva_preview";
 
 const BYPASS_PREFIXES = [
   "/coming-soon",
+  "/api",
   "/_next",
   "/favicon.ico",
   "/icon.svg",
