@@ -11,29 +11,49 @@ const CHOICES = [
 
 type Choice = (typeof CHOICES)[number]["value"];
 
-export function OtherWorkerRolePicker() {
+type Props = {
+  defaultChoice?: Choice;
+  defaultCustomLabel?: string;
+  variant?: "onboarding" | "profile";
+};
+
+export function OtherWorkerRolePicker({
+  defaultChoice,
+  defaultCustomLabel,
+  variant = "onboarding",
+}: Props = {}) {
   const [state, formAction, pending] = useActionState(
     setOtherWorkerRoleAction,
     undefined,
   );
-  const [choice, setChoice] = useState<Choice>("operator_admin");
+  const [choice, setChoice] = useState<Choice>(defaultChoice ?? "operator_admin");
+
+  const isProfile = variant === "profile";
 
   return (
     <form
       action={formAction}
-      className="rounded-2xl border border-[var(--color-brand-200)] bg-[var(--color-brand-50)] p-6"
+      className={
+        isProfile
+          ? "flex flex-col gap-4"
+          : "rounded-2xl border border-[var(--color-brand-200)] bg-[var(--color-brand-50)] p-6"
+      }
     >
-      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--color-brand-800)]">
-        Doplň svou roli
-      </p>
-      <h2 className="display-xs mt-2 text-xl text-[var(--color-ink)]">
-        Co konkrétně v autoškole děláš?
-      </h2>
-      <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
-        Bez konkrétní role se ti nezobrazí matching ani inzeráty.
-      </p>
+      {!isProfile ? (
+        <>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--color-brand-800)]">
+            Doplň svou roli
+          </p>
+          <h2 className="display-xs mt-2 text-xl text-[var(--color-ink)]">
+            Co konkrétně v autoškole děláš?
+          </h2>
+          <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
+            Bez konkrétní role se ti nezobrazí matching ani inzeráty.
+          </p>
+        </>
+      ) : null}
 
-      <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-3">
+      <div className={isProfile ? "grid grid-cols-1 gap-2 sm:grid-cols-3" : "mt-5 grid grid-cols-1 gap-2 sm:grid-cols-3"}>
         {CHOICES.map((opt) => {
           const checked = choice === opt.value;
           return (
@@ -66,7 +86,7 @@ export function OtherWorkerRolePicker() {
       </div>
 
       {choice === "other" ? (
-        <label className="mt-4 flex flex-col gap-1">
+        <label className={isProfile ? "flex flex-col gap-1" : "mt-4 flex flex-col gap-1"}>
           <span className="text-xs font-medium text-[var(--color-ink-muted)]">
             Popis tvé role
           </span>
@@ -75,6 +95,7 @@ export function OtherWorkerRolePicker() {
             required
             minLength={2}
             maxLength={80}
+            defaultValue={defaultChoice === "other" ? defaultCustomLabel ?? "" : ""}
             placeholder="např. mechanik služebních vozů"
             className="rounded-md border border-[var(--color-line-strong)] bg-[var(--color-paper)] px-3 py-2 text-sm focus:border-[var(--color-brand-700)] focus:outline-none"
           />
@@ -82,15 +103,25 @@ export function OtherWorkerRolePicker() {
       ) : null}
 
       {state?.error ? (
-        <p className="mt-3 text-sm text-[var(--color-danger)]">{state.error}</p>
+        <p className={isProfile ? "text-sm text-[var(--color-danger)]" : "mt-3 text-sm text-[var(--color-danger)]"}>
+          {state.error}
+        </p>
+      ) : null}
+      {state?.ok ? (
+        <p className={isProfile ? "text-sm text-[var(--color-brand-700)]" : "mt-3 text-sm text-[var(--color-brand-700)]"}>
+          Uloženo.
+        </p>
       ) : null}
 
       <button
         type="submit"
         disabled={pending}
-        className="mt-5 rounded-md bg-[var(--color-ink)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-brand-900)] disabled:opacity-60"
+        className={
+          (isProfile ? "self-start " : "mt-5 ") +
+          "rounded-md bg-[var(--color-ink)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-brand-900)] disabled:opacity-60"
+        }
       >
-        {pending ? "Ukládám…" : "Uložit roli"}
+        {pending ? "Ukládám…" : isProfile ? "Uložit roli" : "Uložit roli"}
       </button>
     </form>
   );

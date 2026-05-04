@@ -66,7 +66,7 @@ const EmployerInputSchema = z.object({
   contactPerson: z.string().trim().max(120).optional().or(z.literal("")),
 });
 
-export type FormActionState = { error?: string } | undefined;
+export type FormActionState = { error?: string; ok?: boolean } | undefined;
 
 export async function createEmployerProfileAction(
   _prev: FormActionState,
@@ -301,7 +301,7 @@ export async function setOtherWorkerRoleAction(
     };
   }
 
-  return undefined;
+  return { ok: true };
 }
 
 const PriceSchema = z.coerce

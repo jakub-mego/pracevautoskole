@@ -17,6 +17,7 @@ import {
   professionalProfiles,
   professionalRoles,
   professionalLicenses,
+  courtInterpreterProfiles,
 } from "../../../drizzle/schema";
 
 export type FormActionState = { error?: string; ok?: boolean } | undefined;
@@ -218,6 +219,88 @@ const ALLOWED_CREDENTIAL_TYPES = new Set([
   "application/pdf",
 ]);
 const MAX_CREDENTIAL_BYTES = 10 * 1024 * 1024;
+
+const PriceSchemaProfile = z.coerce
+  .number()
+  .int("Zadej celé číslo v Kč.")
+  .min(0, "Cena nemůže být záporná.")
+  .max(1_000_000, "Cena je mimo realistický rozsah.")
+  .optional();
+
+function splitListProfile(raw: FormDataEntryValue | null, max: number): string[] {
+  if (raw == null) return [];
+  return String(raw)
+    .split(/[,\n;]+/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, max);
+}
+
+const CourtInterpreterUpdateSchema = z.object({
+  testTranslationPriceCzk: PriceSchemaProfile,
+  examTranslationPriceCzk: PriceSchemaProfile,
+  languages: z.array(z.string().trim().min(1).max(60)).min(1, "Přidej alespoň jeden jazyk."),
+  cities: z.array(z.string().trim().min(1).max(80)).min(1, "Přidej alespoň jedno město působnosti."),
+});
+
+export async function updateCourtInterpreterProfileAction(
+  _prev: FormActionState,
+  formData: FormData,
+): Promise<FormActionState> {
+  const session = await requireSession();
+  const profile = await getProfileByUserId(session.user.id);
+  if (!profile || profile.type !== "professional") {
+    return { error: "Tato akce je dostupná jen profesionálovi." };
+  }
+
+  const parsed = CourtInterpreterUpdateSchema.safeParse({
+    testTranslationPriceCzk: formData.get("testTranslationPriceCzk") || undefined,
+    examTranslationPriceCzk: formData.get("examTranslationPriceCzk") || undefined,
+    languages: splitListProfile(formData.get("languages"), 30),
+    cities: splitListProfile(formData.get("cities"), 50),
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Neplatná data." };
+  }
+  const { testTranslationPriceCzk, examTranslationPriceCzk, languages, cities } = parsed.data;
+
+  try {
+    const existing = await db
+      .select({ profileId: courtInterpreterProfiles.profileId })
+      .from(courtInterpreterProfiles)
+      .where(eq(courtInterpreterProfiles.profileId, profile.id))
+      .limit(1);
+
+    if (existing[0]) {
+      await db
+        .update(courtInterpreterProfiles)
+        .set({
+          testTranslationPriceCzk: testTranslationPriceCzk ?? null,
+          examTranslationPriceCzk: examTranslationPriceCzk ?? null,
+          languages,
+          cities,
+          updatedAt: new Date(),
+        })
+        .where(eq(courtInterpreterProfiles.profileId, profile.id));
+    } else {
+      await db.insert(courtInterpreterProfiles).values({
+        profileId: profile.id,
+        testTranslationPriceCzk: testTranslationPriceCzk ?? null,
+        examTranslationPriceCzk: examTranslationPriceCzk ?? null,
+        languages,
+        cities,
+      });
+    }
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Uložení profilu tlumočníka selhalo.",
+    };
+  }
+
+  revalidatePath("/profile");
+  revalidatePath("/dashboard");
+  return { ok: true };
+}
 
 function extensionFor(contentType: string): string {
   switch (contentType) {

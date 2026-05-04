@@ -1,20 +1,43 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { requireSession } from "@/lib/auth/server";
-import { getFullProfileByUserId } from "@/lib/profiles/queries";
+import {
+  getFullProfileByUserId,
+  getCourtInterpreterProfileByProfileId,
+} from "@/lib/profiles/queries";
 import { EmployerProfileForm } from "@/components/forms/employer-profile-form";
 import { ProfessionalProfileForm } from "@/components/forms/professional-profile-form";
+import { CourtInterpreterProfileForm } from "@/components/forms/court-interpreter-profile-form";
+import { OtherWorkerRolePicker } from "@/components/forms/other-worker-role-picker";
 import { DeleteAccountDialog } from "@/components/forms/delete-account-dialog";
 
 export const metadata = {
   title: "Můj profil",
 };
 
+const OTHER_WORKER_ROLES = new Set(["operator_admin", "medic", "other"]);
+
 export default async function ProfilePage() {
   const session = await requireSession();
   const data = await getFullProfileByUserId(session.user.id);
   if (!data) redirect("/onboarding");
   const { profile, employer, professional, roles, licenses } = data;
+
+  const isCourtInterpreter =
+    profile.type === "professional" &&
+    roles.length === 1 &&
+    roles[0] === "court_interpreter";
+  const courtInterpreter = isCourtInterpreter
+    ? await getCourtInterpreterProfileByProfileId(profile.id)
+    : null;
+
+  const isOtherWorker =
+    profile.type === "professional" &&
+    (roles.length === 0 ||
+      (roles.length === 1 && OTHER_WORKER_ROLES.has(roles[0])));
+  const currentOtherChoice = isOtherWorker && roles.length === 1
+    ? (roles[0] as "operator_admin" | "medic" | "other")
+    : undefined;
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
@@ -61,6 +84,47 @@ export default async function ProfilePage() {
           />
         ) : null}
       </div>
+
+      {isCourtInterpreter ? (
+        <section className="mt-10 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6">
+          <h2 className="display-xs text-base text-[var(--color-ink)]">
+            Sazby a působnost
+          </h2>
+          <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
+            Ceny překladů, jazyky a města, kam dojíždíš tlumočit.
+          </p>
+          <div className="mt-5">
+            <CourtInterpreterProfileForm
+              defaults={{
+                testTranslationPriceCzk:
+                  courtInterpreter?.testTranslationPriceCzk ?? null,
+                examTranslationPriceCzk:
+                  courtInterpreter?.examTranslationPriceCzk ?? null,
+                languages: courtInterpreter?.languages ?? [],
+                cities: courtInterpreter?.cities ?? [],
+              }}
+            />
+          </div>
+        </section>
+      ) : null}
+
+      {isOtherWorker ? (
+        <section className="mt-10 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6">
+          <h2 className="display-xs text-base text-[var(--color-ink)]">
+            Konkrétní role v autoškole
+          </h2>
+          <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
+            Co přesně v autoškole děláš. Můžeš to kdykoli změnit.
+          </p>
+          <div className="mt-5">
+            <OtherWorkerRolePicker
+              variant="profile"
+              defaultChoice={currentOtherChoice}
+              defaultCustomLabel={professional?.customRoleLabel ?? undefined}
+            />
+          </div>
+        </section>
+      ) : null}
 
       <section className="mt-10 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6">
         <h2 className="display-xs text-base text-[var(--color-ink)]">Tvoje data (GDPR)</h2>
