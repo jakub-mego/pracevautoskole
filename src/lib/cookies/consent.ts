@@ -44,6 +44,6 @@ export function serializeConsent(state: ConsentState) {
   return encodeURIComponent(JSON.stringify(state));
 }
 
-// Aktuálně používáme jen essential cookies (Better Auth session).
 // Banner se zobrazí pouze když je tahle hodnota true.
-export const HAS_NON_ESSENTIAL_COOKIES = false;
+// Aktuálně true: GA4 (analytics) je nasazený a vyžaduje opt-in souhlas.
+export const HAS_NON_ESSENTIAL_COOKIES = true;

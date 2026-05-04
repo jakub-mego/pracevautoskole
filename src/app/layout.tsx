@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { EmailVerificationBanner } from "@/components/layout/email-verification-banner";
 import { CookieBanner } from "@/components/layout/cookie-banner";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -34,6 +35,9 @@ export const metadata: Metadata = {
   },
   description:
     "Tržiště práce pro autoškoly a profesionály oboru v ČR. Inzeráty, profily, matching.",
+  verification: {
+    google: "nBrY8bYKrvG1qNvexs4DWMsBw4cbOjT2DQwm--nfg90",
+  },
 };
 
 export default function RootLayout({
@@ -52,6 +56,7 @@ export default function RootLayout({
         {children}
         <SiteFooter />
         <CookieBanner />
+        <GoogleAnalytics />
       </body>
     </html>
   );
