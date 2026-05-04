@@ -90,13 +90,15 @@ export function SignUpForm() {
     setRoles((prev) => nextRoles(prev, key));
   }
 
+  const isEmployer = roles.has("employer");
+
   async function onSubmit(formData: FormData) {
     setError(null);
     if (roles.size === 0) {
       setError("Vyber, kdo jsi — jednu možnost (učitel + lektor §48 lze zároveň).");
       return;
     }
-    const destination = destinationFor(roles);
+    let destination = destinationFor(roles);
     if (!destination) {
       setError("Neplatná kombinace rolí.");
       return;
@@ -105,9 +107,29 @@ export function SignUpForm() {
       setError("Pro registraci je potřeba souhlasit s podmínkami.");
       return;
     }
+
+    const name = isEmployer
+      ? String(formData.get("schoolName") ?? "").trim()
+      : String(formData.get("name") ?? "").trim();
+    const contactPerson = isEmployer
+      ? String(formData.get("contactPerson") ?? "").trim()
+      : "";
+
+    if (isEmployer) {
+      if (name.length < 2) {
+        setError("Vyplň název autoškoly (min. 2 znaky).");
+        return;
+      }
+      if (contactPerson.length < 2) {
+        setError("Vyplň kontaktní osobu (min. 2 znaky).");
+        return;
+      }
+      destination = `/onboarding/employer?contact=${encodeURIComponent(contactPerson)}`;
+    }
+
     setPending(true);
     const { error } = await authClient.signUp.email({
-      name: String(formData.get("name") ?? "").trim(),
+      name,
       email: String(formData.get("email") ?? "").trim(),
       password: String(formData.get("password") ?? ""),
     });
@@ -162,15 +184,40 @@ export function SignUpForm() {
         </div>
       </fieldset>
 
-      <Field label="Jméno" required>
-        <Input
-          name="name"
-          type="text"
-          autoComplete="name"
-          required
-          minLength={2}
-        />
-      </Field>
+      {isEmployer ? (
+        <>
+          <Field label="Název autoškoly" required>
+            <Input
+              name="schoolName"
+              type="text"
+              autoComplete="organization"
+              required
+              minLength={2}
+              placeholder="Autoškola Příklad s.r.o."
+            />
+          </Field>
+          <Field label="Kontaktní osoba" required>
+            <Input
+              name="contactPerson"
+              type="text"
+              autoComplete="name"
+              required
+              minLength={2}
+              placeholder="Jméno a příjmení"
+            />
+          </Field>
+        </>
+      ) : (
+        <Field label="Jméno" required>
+          <Input
+            name="name"
+            type="text"
+            autoComplete="name"
+            required
+            minLength={2}
+          />
+        </Field>
+      )}
       <Field label="E-mail" required>
         <Input
           name="email"

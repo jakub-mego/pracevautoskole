@@ -85,45 +85,6 @@ export default async function Home({
             )}
           </div>
 
-          {/* Mini product preview */}
-          <div className="relative mx-auto mt-20 max-w-3xl">
-            <div className="absolute inset-x-12 -bottom-6 h-16 rounded-3xl bg-[var(--color-brand-700)]/15 blur-3xl" />
-            <div className="relative rounded-3xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6 text-left shadow-[var(--shadow-elevated)] backdrop-blur sm:p-8">
-              <div className="flex items-center justify-between gap-3">
-                <Eyebrow>Doporučení s 92% shodou</Eyebrow>
-                <span className="rounded-full bg-[var(--color-brand-50)] px-2.5 py-1 text-xs font-bold text-[var(--color-brand-800)] tabular-nums">
-                  92 %
-                </span>
-              </div>
-              <h3 className="display-xs mt-3 text-xl text-[var(--color-ink)] sm:text-2xl">
-                Ukázka doporučení — takhle vypadá shoda v praxi
-              </h3>
-              <p className="mt-1.5 text-sm text-[var(--color-ink-muted)]">
-                Autoškola ověřená přes ARES · krajská shoda · sedí role i kategorie
-              </p>
-              <div className="mt-5 flex flex-wrap gap-1.5">
-                {[
-                  "Role sedí",
-                  "Kategorie ŘP se kryjí",
-                  "Stejný kraj",
-                  "Sazby se překrývají",
-                ].map((reason) => (
-                  <span
-                    key={reason}
-                    className="rounded-md bg-[var(--color-canvas-muted)] px-2 py-1 text-xs text-[var(--color-ink-muted)]"
-                  >
-                    {reason}
-                  </span>
-                ))}
-              </div>
-              <div className="mt-6 flex items-center justify-between border-t border-[var(--color-line-soft)] pt-4 text-xs text-[var(--color-ink-soft)]">
-                <span>1 z 5 navržených protistran</span>
-                <span className="font-medium text-[var(--color-brand-700)]">
-                  Otevřít detail →
-                </span>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -199,12 +160,13 @@ export default async function Home({
               </p>
               <div className="mt-1 flex flex-wrap gap-1.5">
                 {["AM", "A", "B", "BE", "C", "CE", "D", "DE", "T"].map((c) => (
-                  <span
+                  <Link
                     key={c}
-                    className="rounded-md border border-[var(--color-line)] bg-[var(--color-canvas)] px-2 py-1 text-xs font-semibold tabular-nums text-[var(--color-ink-muted)]"
+                    href={`/inzeraty?license=${c}`}
+                    className="rounded-md border border-[var(--color-line)] bg-[var(--color-canvas)] px-2 py-1 text-xs font-semibold tabular-nums text-[var(--color-ink-muted)] transition hover:border-[var(--color-brand-700)] hover:text-[var(--color-brand-700)]"
                   >
                     {c}
-                  </span>
+                  </Link>
                 ))}
               </div>
             </article>

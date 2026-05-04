@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { listPublicListings } from "@/lib/listings/queries";
+import { LICENSE_CATEGORIES } from "@/lib/profiles/labels";
 import { ListingCard } from "@/components/listings/listing-card";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ export const metadata = {
 type Search = Promise<{
   type?: string;
   region?: string;
+  license?: string;
   page?: string;
 }>;
 
@@ -26,14 +28,33 @@ export default async function PublicListingsFeed({
       ? sp.type
       : undefined;
   const region = sp.region?.trim() || undefined;
+  const license = LICENSE_CATEGORIES.includes(
+    sp.license as (typeof LICENSE_CATEGORIES)[number],
+  )
+    ? (sp.license as string)
+    : undefined;
   const page = Math.max(parseInt(sp.page ?? "1", 10) || 1, 1);
 
   const { rows, total, perPage } = await listPublicListings({
     type,
     region,
+    license,
     page,
   });
   const totalPages = Math.max(Math.ceil(total / perPage), 1);
+
+  function buildHref(overrides: { license?: string | null; page?: number }): string {
+    const params = new URLSearchParams();
+    if (type) params.set("type", type);
+    if (region) params.set("region", region);
+    const newLicense =
+      overrides.license === undefined ? license : overrides.license;
+    if (newLicense) params.set("license", newLicense);
+    if (overrides.page && overrides.page > 1)
+      params.set("page", String(overrides.page));
+    const qs = params.toString();
+    return `/inzeraty${qs ? `?${qs}` : ""}`;
+  }
 
   return (
     <main className="relative">
@@ -73,10 +94,13 @@ export default async function PublicListingsFeed({
               className={fieldClass}
             />
           </label>
+          {license ? (
+            <input type="hidden" name="license" value={license} />
+          ) : null}
           <Button type="submit" size="md">
             Filtrovat
           </Button>
-          {(type || region) && (
+          {(type || region || license) && (
             <Link
               href="/inzeraty"
               className="self-center text-sm text-[var(--color-ink-muted)] hover:text-[var(--color-ink)] hover:underline"
@@ -85,6 +109,29 @@ export default async function PublicListingsFeed({
             </Link>
           )}
         </form>
+
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <span className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-ink-muted)]">
+            Kategorie ŘP:
+          </span>
+          {LICENSE_CATEGORIES.map((cat) => {
+            const active = license === cat;
+            return (
+              <Link
+                key={cat}
+                href={buildHref({ license: active ? null : cat })}
+                className={
+                  "rounded-md border px-2.5 py-1 text-xs font-semibold tabular-nums transition " +
+                  (active
+                    ? "border-[var(--color-brand-700)] bg-[var(--color-brand-700)] text-white"
+                    : "border-[var(--color-line-strong)] bg-[var(--color-paper)] text-[var(--color-ink-muted)] hover:border-[var(--color-brand-700)] hover:text-[var(--color-brand-700)]")
+                }
+              >
+                {cat}
+              </Link>
+            );
+          })}
+        </div>
 
         <p className="mt-6 text-sm text-[var(--color-ink-muted)] tabular-nums">
           {total} {total === 1 ? "výsledek" : total < 5 ? "výsledky" : "výsledků"}
@@ -126,11 +173,7 @@ export default async function PublicListingsFeed({
           <nav className="mt-10 flex justify-center gap-2">
             {Array.from({ length: totalPages }).map((_, i) => {
               const p = i + 1;
-              const params = new URLSearchParams();
-              if (type) params.set("type", type);
-              if (region) params.set("region", region);
-              if (p > 1) params.set("page", String(p));
-              const href = `/inzeraty${params.toString() ? `?${params}` : ""}`;
+              const href = buildHref({ page: p });
               const active = p === page;
               return (
                 <Link

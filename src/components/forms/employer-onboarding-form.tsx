@@ -4,7 +4,11 @@ import { useActionState, useState } from "react";
 import { lookupIcoAction, createEmployerProfileAction } from "@/app/onboarding/actions";
 import type { AresSubject } from "@/lib/ares/client";
 
-export function EmployerOnboardingForm() {
+export function EmployerOnboardingForm({
+  defaultContactPerson,
+}: {
+  defaultContactPerson?: string;
+} = {}) {
   const [ico, setIco] = useState("");
   const [subject, setSubject] = useState<AresSubject | null>(null);
   const [lookupError, setLookupError] = useState<string | null>(null);
@@ -73,6 +77,17 @@ export function EmployerOnboardingForm() {
               required
               minLength={2}
               maxLength={120}
+              className="rounded-md border border-[var(--color-line-strong)] bg-[var(--color-paper)] px-3 py-2 text-sm focus:border-[var(--color-brand-700)] focus:outline-none"
+            />
+          </label>
+
+          <label className="flex flex-col gap-1">
+            <span className="text-sm font-medium text-[var(--color-ink-muted)]">Kontaktní osoba</span>
+            <input
+              name="contactPerson"
+              defaultValue={defaultContactPerson ?? ""}
+              maxLength={120}
+              placeholder="Jméno a příjmení"
               className="rounded-md border border-[var(--color-line-strong)] bg-[var(--color-paper)] px-3 py-2 text-sm focus:border-[var(--color-brand-700)] focus:outline-none"
             />
           </label>

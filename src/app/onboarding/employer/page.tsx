@@ -7,10 +7,16 @@ export const metadata = {
   title: "Profil autoškoly",
 };
 
-export default async function EmployerOnboardingPage() {
+export default async function EmployerOnboardingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ contact?: string }>;
+}) {
   const session = await requireSession();
   const profile = await getProfileByUserId(session.user.id);
   if (profile) redirect("/dashboard");
+  const sp = await searchParams;
+  const defaultContactPerson = sp.contact?.slice(0, 120) ?? undefined;
 
   return (
     <main className="mx-auto w-full max-w-xl flex-1 px-6 py-12">
@@ -22,7 +28,7 @@ export default async function EmployerOnboardingPage() {
       </p>
 
       <div className="mt-8">
-        <EmployerOnboardingForm />
+        <EmployerOnboardingForm defaultContactPerson={defaultContactPerson} />
       </div>
     </main>
   );

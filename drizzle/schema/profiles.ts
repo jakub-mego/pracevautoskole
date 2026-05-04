@@ -51,6 +51,7 @@ export const employerProfiles = pgTable(
     website: text("website"),
     phone: text("phone"),
     publicEmail: text("public_email"),
+    contactPerson: text("contact_person"),
     aresVerifiedAt: timestamp("ares_verified_at", { withTimezone: true }),
     aresSnapshot: jsonb("ares_snapshot"),
     isAutoskola: boolean("is_autoskola").notNull().default(true),

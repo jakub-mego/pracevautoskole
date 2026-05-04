@@ -25,7 +25,7 @@ export async function generateMetadata({
   if (city) {
     return {
       title: `Práce v autoškole ${city.name}`,
-      description: `Aktuální nabídky práce v autoškolách v ${city.name}. Inzeráty na učitele, mistry odborného výcviku a lektory.`,
+      description: `Aktuální nabídky práce v autoškolách v ${city.name}. Inzeráty na učitele, lektory a další pozice oboru.`,
     };
   }
   if (role) {

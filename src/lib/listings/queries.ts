@@ -118,6 +118,7 @@ export async function listActiveListingsByProfile(profileId: string) {
 export type PublicListFilters = {
   type?: "employer_seeks" | "professional_seeks";
   region?: string;
+  license?: string;
   page?: number;
   perPage?: number;
 };
@@ -223,6 +224,11 @@ export async function listPublicListings(filters: PublicListFilters = {}) {
   const where = [eq(listings.status, "active"), notExpired()];
   if (filters.type) where.push(eq(listings.type, filters.type));
   if (filters.region) where.push(eq(listings.region, filters.region));
+  if (filters.license) {
+    where.push(
+      sql`exists (select 1 from ${listingLicenses} ll where ll.listing_id = ${listings.id} and ll.category = ${filters.license})`,
+    );
+  }
 
   const rows = await db
     .select({

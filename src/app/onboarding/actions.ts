@@ -63,6 +63,7 @@ const EmployerInputSchema = z.object({
   ico: IcoSchema,
   displayName: z.string().trim().min(2, "Zadej název min. 2 znaky.").max(120),
   city: z.string().trim().max(80).optional().or(z.literal("")),
+  contactPerson: z.string().trim().max(120).optional().or(z.literal("")),
 });
 
 export type FormActionState = { error?: string } | undefined;
@@ -81,11 +82,12 @@ export async function createEmployerProfileAction(
     ico: formData.get("ico"),
     displayName: formData.get("displayName"),
     city: formData.get("city") ?? "",
+    contactPerson: formData.get("contactPerson") ?? "",
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Neplatná data." };
   }
-  const { ico, displayName, city } = parsed.data;
+  const { ico, displayName, city, contactPerson } = parsed.data;
 
   const subject = await lookupIco(ico);
   if (!subject) return { error: "ARES subjekt nenalezen nebo zanikl." };
@@ -110,6 +112,7 @@ export async function createEmployerProfileAction(
         profileId,
         ico: subject.ico,
         legalName: subject.obchodniJmeno,
+        contactPerson: contactPerson || null,
         aresVerifiedAt: new Date(),
         aresSnapshot: subject,
       });

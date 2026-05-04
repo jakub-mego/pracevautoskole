@@ -17,7 +17,7 @@ export function SiteFooter() {
           </div>
           <p className="mt-3 max-w-sm text-sm leading-relaxed text-[var(--color-ink-muted)]">
             Specializované tržiště práce pro obor autoškol v ČR. Pro učitele,
-            mistry odborného výcviku, lektory § 48 i provoz.
+            lektory § 48, soudní tlumočníky i provoz.
           </p>
           <p className="mt-6 text-xs text-[var(--color-ink-soft)]">
             Provozuje{" "}

@@ -64,6 +64,13 @@
       "when": 1777535148206,
       "tag": "0008_cooing_ulik",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1777897315849,
+      "tag": "0009_lazy_wasp",
+      "breakpoints": true
     }
   ]
 }
