@@ -11,7 +11,7 @@ export default function TermsPage() {
         Podmínky používání
       </h1>
       <p className="mt-2 text-sm text-[var(--color-ink-soft)]">
-        Naposledy aktualizováno: 2026-04-26
+        Naposledy aktualizováno: 2026-05-04
       </p>
 
       <section className="prose prose-zinc mt-8 max-w-none text-[var(--color-ink)]">
@@ -46,11 +46,11 @@ export default function TermsPage() {
         </h2>
         <p className="mt-2">
           Služba je tržiště zprostředkovávající kontakt mezi autoškolami a
-          profesionály oboru (učitelé autoškoly, mistři praktického výcviku,
-          lektoři 48hod. školení a další). Provozovatel
-          není stranou pracovněprávního ani jiného vztahu mezi inzerenty a
-          zájemci. Služba slouží výhradně k publikaci profilů a inzerátů a jejich
-          vzájemnému vyhledání.
+          profesionály oboru (učitelé autoškoly, lektoři § 48 školení řidičů,
+          soudní tlumočníci, zdravotníci, provozní pracovníci a další).
+          Provozovatel není stranou pracovněprávního ani jiného vztahu mezi
+          inzerenty a zájemci. Služba slouží výhradně k publikaci profilů a
+          inzerátů a jejich vzájemnému vyhledání.
         </p>
 
         <h2 className="mt-8 text-xl font-semibold text-[var(--color-ink)]">
@@ -111,10 +111,32 @@ export default function TermsPage() {
           5. Platby
         </h2>
         <p className="mt-2">
-          Aktuálně je publikace inzerátů zdarma. O případném zpoplatnění
-          jednotlivých funkcí (např. zvýraznění inzerátu, ověřený badge, přístup
-          k databázi) budeme předem informovat. Žádné poplatky neúčtujeme bez
-          tvého souhlasu.
+          Každý profil má první <strong>3 zveřejněné inzeráty zdarma</strong>.
+          Každý další zveřejněný inzerát je zpoplatněn:
+        </p>
+        <ul className="mt-2 list-disc pl-6">
+          <li>
+            <strong>790 Kč</strong> za inzerát pro autoškolu (employer)
+          </li>
+          <li>
+            <strong>299 Kč</strong> za inzerát pro profesionála (učitel,
+            lektor, soudní tlumočník a další)
+          </li>
+        </ul>
+        <p className="mt-2">
+          Inzerát je po zaplacení aktivní 90 dní; po expiraci ho lze
+          opětovně aktivovat zdarma (slot je již spotřebovaný). Platby
+          probíhají přes Stripe (karta) nebo bankovním převodem (Fio). Cena je
+          uvedena včetně případné DPH dle zákonných pravidel.
+        </p>
+        <p className="mt-2">
+          Pokud z naší strany dojde k chybě a inzerát se po zaplacení
+          nezveřejní, kontaktuj nás — vyřešíme refund nebo opětovné
+          zveřejnění.
+        </p>
+        <p className="mt-2">
+          O případných změnách ceníku nebo zavedení dalších placených funkcí
+          (zvýraznění, badge, přístup k databázi) budeme předem informovat.
         </p>
 
         <h2 className="mt-8 text-xl font-semibold text-[var(--color-ink)]">

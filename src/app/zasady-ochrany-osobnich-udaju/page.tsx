@@ -11,7 +11,7 @@ export default function PrivacyPage() {
         Zásady ochrany osobních údajů
       </h1>
       <p className="mt-2 text-sm text-[var(--color-ink-soft)]">
-        Naposledy aktualizováno: 2026-04-26
+        Naposledy aktualizováno: 2026-05-04
       </p>
 
       <section className="prose prose-zinc mt-8 max-w-none text-[var(--color-ink)]">
@@ -150,6 +150,20 @@ export default function PrivacyPage() {
             <strong>Fio banka, a.s.</strong> (ČR) — vedení účtu pro příjem
             bankovních převodů. Z banky čteme přehled došlých plateb pro
             spárování s objednávkou (variabilní symbol, částka, ID transakce).
+          </li>
+          <li>
+            <strong>Google Ireland Limited</strong> (IE) — měření návštěvnosti
+            prostřednictvím Google Analytics 4. Předáváme jen anonymizovanou
+            IP adresu, identifikátor cookie a obecné informace o relaci
+            (zobrazená stránka, použité zařízení). Pouze pokud udělíš souhlas
+            v cookie banneru. Souhlas můžeš kdykoli odvolat na stránce{" "}
+            <a
+              href="/cookies"
+              className="font-medium text-[var(--color-ink)] underline"
+            >
+              Zásady používání cookies
+            </a>
+            .
           </li>
         </ul>
         <p className="mt-2">

@@ -13,7 +13,7 @@ export default function CookiesPage() {
         Zásady používání cookies
       </h1>
       <p className="mt-2 text-sm text-[var(--color-ink-soft)]">
-        Naposledy aktualizováno: 2026-04-26
+        Naposledy aktualizováno: 2026-05-04
       </p>
 
       <section className="prose prose-zinc mt-8 max-w-none text-[var(--color-ink)]">
@@ -62,11 +62,40 @@ export default function CookiesPage() {
 
         <h3 className="mt-6 font-medium text-[var(--color-ink)]">Analytické (volitelné)</h3>
         <p className="mt-2">
-          Aktuálně{" "}
-          <strong>žádné analytické cookies nepoužíváme</strong>. Pokud do
-          budoucna přidáme měření návštěvnosti (např. Plausible nebo Google
-          Analytics), zobrazíme ti banner se souhlasem ještě před jejich
-          aktivací.
+          Pro měření návštěvnosti používáme <strong>Google Analytics 4</strong>{" "}
+          (Google Ireland Limited). Spustí se <strong>jen tehdy, když udělíš
+          souhlas</strong> v cookie banneru. Bez souhlasu se script ani
+          nenahraje a žádné analytické cookies nevzniknou.
+        </p>
+        <table className="mt-2 w-full border-collapse text-sm">
+          <thead>
+            <tr className="border-b border-[var(--color-line-strong)] text-left text-[var(--color-ink-muted)]">
+              <th className="py-2 pr-4 font-medium">Název</th>
+              <th className="py-2 pr-4 font-medium">Účel</th>
+              <th className="py-2 font-medium">Trvání</th>
+            </tr>
+          </thead>
+          <tbody className="text-[var(--color-ink-muted)]">
+            <tr className="border-b border-[var(--color-line)]">
+              <td className="py-2 pr-4 font-mono text-xs">_ga</td>
+              <td className="py-2 pr-4">
+                Rozlišení unikátních návštěvníků (anonymně).
+              </td>
+              <td className="py-2">2 roky</td>
+            </tr>
+            <tr className="border-b border-[var(--color-line)]">
+              <td className="py-2 pr-4 font-mono text-xs">_ga_JJDSBX6BC6</td>
+              <td className="py-2 pr-4">
+                Stav relace pro Google Analytics 4 (kontejner).
+              </td>
+              <td className="py-2">2 roky</td>
+            </tr>
+          </tbody>
+        </table>
+        <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
+          IP adresa se anonymizuje (poslední oktet je odstraněn). Data jsou
+          uložená v EU. Souhlas můžeš odvolat tlačítkem níže nebo smazáním
+          cookies v prohlížeči.
         </p>
 
         <h3 className="mt-6 font-medium text-[var(--color-ink)]">Marketingové</h3>
