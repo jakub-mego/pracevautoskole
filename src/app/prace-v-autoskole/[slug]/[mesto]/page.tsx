@@ -67,7 +67,22 @@ export default async function LandingComboPage({
       </h1>
       <p className="mt-3 max-w-2xl text-[var(--color-ink-muted)]">
         Aktuální nabídky práce na pozici <strong>{r.name.toLowerCase()}</strong> v
-        autoškolách v {c.name} ({c.region}). {r.intro}
+        autoškolách v {c.name} ({c.region}). {r.shortIntro}
+      </p>
+      {c.marketNote ? (
+        <p className="mt-2 max-w-2xl text-sm text-[var(--color-ink-muted)]">
+          {c.marketNote}
+        </p>
+      ) : null}
+      <p className="mt-4 max-w-2xl text-sm text-[var(--color-ink-muted)]">
+        Detail profese, kvalifikace a orientační odměna na samostatné stránce{" "}
+        <Link
+          href={`/prace-v-autoskole/${r.slug}`}
+          className="font-medium text-[var(--color-brand-700)] underline-offset-2 hover:underline"
+        >
+          {r.name} — celostátní přehled
+        </Link>
+        .
       </p>
 
       <section className="mt-8">

@@ -4,7 +4,7 @@ import { SEO_CITIES, SEO_ROLES } from "@/lib/seo/landing-data";
 export const metadata = {
   title: "Práce v autoškole — kraj, město, role",
   description:
-    "Aktuální nabídky práce v autoškolách napříč ČR. Vyber si podle role (učitel, mistr výcviku, lektor § 48) nebo města.",
+    "Aktuální nabídky práce v autoškolách napříč ČR. Vyber si podle role (učitel, lektor § 48, soudní tlumočník, zkušební komisař) nebo města.",
 };
 
 export default function LandingHubPage() {
@@ -33,7 +33,7 @@ export default function LandingHubPage() {
               >
                 {r.name}
               </Link>
-              <p className="mt-1 text-sm text-[var(--color-ink-muted)] line-clamp-3">{r.intro}</p>
+              <p className="mt-1 text-sm text-[var(--color-ink-muted)] line-clamp-3">{r.shortIntro}</p>
             </li>
           ))}
         </ul>
