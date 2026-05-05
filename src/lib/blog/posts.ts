@@ -3,6 +3,7 @@ import * as etestyPruvodce from "@/content/blog/etesty-autoskola-pruvodce";
 import * as ucitelBrno from "@/content/blog/ucitel-autoskoly-brno-kariera";
 import * as ucitelPraha from "@/content/blog/ucitel-autoskoly-praha-kariera";
 import * as testyBezStresu from "@/content/blog/testy-na-autoskolu-bez-stresu";
+import * as mdTestyInstruktor from "@/content/blog/ministerstvo-dopravy-testy-pro-instruktory";
 import type { Post, PostMeta } from "./types";
 
 const RAW_POSTS: Post[] = [
@@ -11,6 +12,7 @@ const RAW_POSTS: Post[] = [
   { meta: ucitelBrno.meta, Article: ucitelBrno.default },
   { meta: ucitelPraha.meta, Article: ucitelPraha.default },
   { meta: testyBezStresu.meta, Article: testyBezStresu.default },
+  { meta: mdTestyInstruktor.meta, Article: mdTestyInstruktor.default },
 ];
 
 // Seřazené od nejnovějších.
