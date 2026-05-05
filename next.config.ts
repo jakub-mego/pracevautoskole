@@ -41,6 +41,14 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // www → apex (jediná kanonická URL, lepší pro SEO)
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.pracevautoskole.cz" }],
+        destination: "https://pracevautoskole.cz/:path*",
+        permanent: true,
+      },
+      // Staré /prace-v-autoskole/* URL → root (přesun z 2026-05)
       {
         source: "/prace-v-autoskole",
         destination: "/profese",
