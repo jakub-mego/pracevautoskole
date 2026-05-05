@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { PostMeta } from "@/lib/blog/types";
+import { Faq, FaqItem } from "@/components/blog/faq";
 
 export const meta: PostMeta = {
   slug: "ucitel-autoskoly-brno-kariera",
@@ -164,37 +165,32 @@ export default function Article() {
 
       <h2>Často kladené otázky</h2>
 
-      <h3>Zvládnu to, i když si myslím, že nemám úplně svatou trpělivost?</h3>
-      <p>
-        Určitě. Trpělivost v autě je často jen otázkou cviku a pochopení
-        psychologie žáka. Navíc, duální pedály ti dávají 100% kontrolu nad
-        situací, takže se nemusíš bát o svou ani žákovu bezpečnost. Velmi
-        rychle se naučíš předvídat a předcházet chybám dřív, než vůbec
-        nastanou.
-      </p>
-
-      <h3>Dá se dělat učitel autoškoly jen na zkrácený úvazek?</h3>
-      <p>
-        Naprosto. Spousta učitelů jezdí jen pár hodin týdně — třeba
-        odpoledne po své hlavní práci nebo o víkendech. Je to ideální
-        přivýdělek, nebo pozvolný a bezpečný start do úplně nové kariéry.
-      </p>
-
-      <h3>Co když se během jízdy stane nehoda? Kdo to bude platit?</h3>
-      <p>
-        Autoškoly mají na tyhle situace plně pojištěná auta, havarijní
-        pojištění uzpůsobené pro výcvik. Jako učitel samozřejmě děláš
-        maximum pro to, aby k nehodě nedošlo, ale když už se něco „ťukne"
-        nebo odře o obrubník, od toho tu jsou pojistky. Tvůj plat ani tvé
-        nervy to neohrozí.
-      </p>
-
-      <h3>Musím mít na učení vlastní auto?</h3>
-      <p>
-        Ne. Autoškola, ke které se připojíš, ti k výuce poskytne svoje
-        upravené vozidlo s duálním ovládáním. Veškeré provozní náklady jdou
-        za zaměstnavatelem.
-      </p>
+      <Faq>
+        <FaqItem question="Zvládnu to, i když si myslím, že nemám úplně svatou trpělivost?">
+          Určitě. Trpělivost v autě je často jen otázkou cviku a pochopení
+          psychologie žáka. Navíc duální pedály ti dávají 100% kontrolu nad
+          situací, takže se nemusíš bát o svou ani žákovu bezpečnost. Velmi
+          rychle se naučíš předvídat a předcházet chybám dřív, než vůbec
+          nastanou.
+        </FaqItem>
+        <FaqItem question="Dá se dělat učitel autoškoly jen na zkrácený úvazek?">
+          Naprosto. Spousta učitelů jezdí jen pár hodin týdně — třeba
+          odpoledne po své hlavní práci nebo o víkendech. Je to ideální
+          přivýdělek, nebo pozvolný a bezpečný start do úplně nové kariéry.
+        </FaqItem>
+        <FaqItem question="Co když se během jízdy stane nehoda? Kdo to bude platit?">
+          Autoškoly mají na tyhle situace plně pojištěná auta, havarijní
+          pojištění uzpůsobené pro výcvik. Jako učitel samozřejmě děláš
+          maximum pro to, aby k nehodě nedošlo, ale když už se něco „ťukne"
+          nebo odře o obrubník, od toho tu jsou pojistky. Tvůj plat ani tvé
+          nervy to neohrozí.
+        </FaqItem>
+        <FaqItem question="Musím mít na učení vlastní auto?">
+          Ne. Autoškola, ke které se připojíš, ti k výuce poskytne svoje
+          upravené vozidlo s duálním ovládáním. Veškeré provozní náklady
+          jdou za zaměstnavatelem.
+        </FaqItem>
+      </Faq>
 
       <h2>Zaujalo tě to? Začni jediným klikem</h2>
 

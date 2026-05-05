@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { PostMeta } from "@/lib/blog/types";
+import { Faq, FaqItem } from "@/components/blog/faq";
 
 export const meta: PostMeta = {
   slug: "etesty-autoskola-pruvodce",
@@ -210,49 +211,44 @@ export default function Article() {
 
       <h2>Často kladené otázky</h2>
 
-      <h3>Z čeho přesně se skládají oficiální e-testy autoškola?</h3>
-      <p>
-        Každý teoretický test autoškola pro skupinu B obsahuje přesně 43
-        otázek, za které můžete v součtu získat maximálně 120 bodů.
-        K úspěšnému složení zkoušky nutně potřebujete nahrát alespoň 102
-        bodů. Otázky pokrývají pravidla provozu, dopravní značky, řešení
-        situací na křižovatkách, zdravotnickou přípravu a základy ovládání
-        vozu.
-      </p>
-
-      <h3>Kde najdu kvalitní testy s vysvětlením?</h3>
-      <p>
-        Doporučujeme pravidelně trénovat na portálu{" "}
-        <a
-          href="https://etesty2.onlymego.cz"
-          target="_blank"
-          rel="noopener"
-        >
-          etesty2.onlymego.cz
-        </a>
-        . Web nabízí kompletní e-testy zcela zdarma, s plnou podporou
-        češtiny i angličtiny, a hlavně s detailním vysvětlením každé jedné
-        správné odpovědi.
-      </p>
-
-      <h3>Jak dlouho dopředu mám začít trénovat autoškola testy B?</h3>
-      <p>
-        Ideální je začít s tréninkem bezprostředně po první absolvované
-        teoretické hodině v autoškole. Nečekejte až na samotný konec kurzu.
-        Pravidelné a klidné řešení několika otázek denně je z pedagogického
-        hlediska mnohem efektivnější než stresující nárazové učení celou noc
-        těsně před zkouškou.
-      </p>
-
-      <h3>Jaké podmínky musím splnit, abych se stal učitelem autoškoly?</h3>
-      <p>
-        Zákon č. 247/2000 Sb. vyžaduje věk minimálně 24 let, ukončené
-        střední vzdělání (s maturitou, případně výučním listem v oboru
-        auto-moto), držení řidičského oprávnění skupiny B alespoň 3 roky,
-        čistý trestní rejstřík, dopravně psychologické vyšetření a
-        úspěšné absolvování speciálního kurzu završeného zkouškami na
-        krajském úřadě.
-      </p>
+      <Faq>
+        <FaqItem question="Z čeho přesně se skládají oficiální e-testy autoškola?">
+          Každý teoretický test autoškola pro skupinu B obsahuje přesně 43
+          otázek, za které můžete v součtu získat maximálně 120 bodů.
+          K úspěšnému složení zkoušky nutně potřebujete nahrát alespoň 102
+          bodů. Otázky pokrývají pravidla provozu, dopravní značky, řešení
+          situací na křižovatkách, zdravotnickou přípravu a základy
+          ovládání vozu.
+        </FaqItem>
+        <FaqItem question="Kde najdu kvalitní testy s vysvětlením?">
+          Doporučujeme pravidelně trénovat na portálu{" "}
+          <a
+            href="https://etesty2.onlymego.cz"
+            target="_blank"
+            rel="noopener"
+          >
+            etesty2.onlymego.cz
+          </a>
+          . Web nabízí kompletní e-testy zcela zdarma, s plnou podporou
+          češtiny i angličtiny, a hlavně s detailním vysvětlením každé jedné
+          správné odpovědi.
+        </FaqItem>
+        <FaqItem question="Jak dlouho dopředu mám začít trénovat autoškola testy B?">
+          Ideální je začít s tréninkem bezprostředně po první absolvované
+          teoretické hodině v autoškole. Nečekejte až na samotný konec
+          kurzu. Pravidelné a klidné řešení několika otázek denně je z
+          pedagogického hlediska mnohem efektivnější než stresující
+          nárazové učení celou noc těsně před zkouškou.
+        </FaqItem>
+        <FaqItem question="Jaké podmínky musím splnit, abych se stal učitelem autoškoly?">
+          Zákon č. 247/2000 Sb. vyžaduje věk minimálně 24 let, ukončené
+          střední vzdělání (s maturitou, případně výučním listem v oboru
+          auto-moto), držení řidičského oprávnění skupiny B alespoň 3 roky,
+          čistý trestní rejstřík, dopravně psychologické vyšetření a
+          úspěšné absolvování speciálního kurzu završeného zkouškami na
+          krajském úřadě.
+        </FaqItem>
+      </Faq>
 
       <h2>Žák, nebo budoucí učitel? Vyber si svůj další krok</h2>
 
