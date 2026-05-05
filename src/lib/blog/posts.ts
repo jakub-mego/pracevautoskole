@@ -5,6 +5,7 @@ import * as ucitelPraha from "@/content/blog/ucitel-autoskoly-praha-kariera";
 import * as testyBezStresu from "@/content/blog/testy-na-autoskolu-bez-stresu";
 import * as mdTestyInstruktor from "@/content/blog/ministerstvo-dopravy-testy-pro-instruktory";
 import * as ucitelLiberec from "@/content/blog/ucitel-autoskoly-liberec-kariera";
+import * as ucitelOlomouc from "@/content/blog/ucitel-autoskoly-olomouc-kariera";
 import type { Post, PostMeta } from "./types";
 
 const RAW_POSTS: Post[] = [
@@ -15,6 +16,7 @@ const RAW_POSTS: Post[] = [
   { meta: testyBezStresu.meta, Article: testyBezStresu.default },
   { meta: mdTestyInstruktor.meta, Article: mdTestyInstruktor.default },
   { meta: ucitelLiberec.meta, Article: ucitelLiberec.default },
+  { meta: ucitelOlomouc.meta, Article: ucitelOlomouc.default },
 ];
 
 // Seřazené od nejnovějších.
