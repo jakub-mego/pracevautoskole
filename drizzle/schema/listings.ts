@@ -31,13 +31,21 @@ export const listings = pgTable(
     remoteFriendly: integer("remote_friendly").notNull().default(0),
     travelRadiusKm: integer("travel_radius_km"),
 
-    // Sazby za 45 min v Kč (min/max). Theory/practice/health
+    // Sazby za 45 min v Kč (min/max). Theory/practice/health.
+    // Practice je "praxe — auto autoškoly". Practice-own-car je se svým
+    // vozidlem (typicky vyšší sazba, jiná logika kalkulace).
     rateTheoryMin: integer("rate_theory_min"),
     rateTheoryMax: integer("rate_theory_max"),
     ratePracticeMin: integer("rate_practice_min"),
     ratePracticeMax: integer("rate_practice_max"),
+    ratePracticeOwnCarMin: integer("rate_practice_own_car_min"),
+    ratePracticeOwnCarMax: integer("rate_practice_own_car_max"),
     rateHealthMin: integer("rate_health_min"),
     rateHealthMax: integer("rate_health_max"),
+
+    // Pro professional_seeks: signalizuje, že učitel má vlastní výcvikové
+    // vozidlo a chce s ním jezdit (souvisí s rate_practice_own_car_*).
+    hasOwnVehicle: integer("has_own_vehicle").notNull().default(0),
 
     employmentType: text("employment_type"),
     startAvailability: text("start_availability"),

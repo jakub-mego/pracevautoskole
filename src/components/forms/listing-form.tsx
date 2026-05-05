@@ -26,6 +26,9 @@ type Defaults = {
   ratePracticeMax?: number | null;
   rateHealthMin?: number | null;
   rateHealthMax?: number | null;
+  ratePracticeOwnCarMin?: number | null;
+  ratePracticeOwnCarMax?: number | null;
+  hasOwnVehicle?: number | boolean | null;
   employmentType?: string | null;
   startAvailability?: string | null;
   roles?: string[];
@@ -314,32 +317,76 @@ export function ListingForm({ mode, listingId, defaults, intent }: Props) {
       </div>
 
       {isCourse ? null : (
-        <fieldset className="grid grid-cols-1 gap-4 rounded-lg border border-[var(--color-line)] bg-[var(--color-canvas)] p-4 sm:grid-cols-3">
-          <legend className="text-sm font-medium text-[var(--color-ink-muted)]">
-            Sazby Kč / 45 min (volitelné)
-          </legend>
-          <RatePair
-            label="Teorie"
-            minName="rateTheoryMin"
-            maxName="rateTheoryMax"
-            minDefault={defaults?.rateTheoryMin}
-            maxDefault={defaults?.rateTheoryMax}
-          />
-          <RatePair
-            label="Praxe"
-            minName="ratePracticeMin"
-            maxName="ratePracticeMax"
-            minDefault={defaults?.ratePracticeMin}
-            maxDefault={defaults?.ratePracticeMax}
-          />
-          <RatePair
-            label="Zdravotní"
-            minName="rateHealthMin"
-            maxName="rateHealthMax"
-            minDefault={defaults?.rateHealthMin}
-            maxDefault={defaults?.rateHealthMax}
-          />
-        </fieldset>
+        <>
+          <fieldset className="grid grid-cols-1 gap-4 rounded-lg border border-[var(--color-line)] bg-[var(--color-canvas)] p-4 sm:grid-cols-3">
+            <legend className="text-sm font-medium text-[var(--color-ink-muted)]">
+              Sazby Kč / 45 min (volitelné)
+            </legend>
+            <RatePair
+              label="Teorie"
+              minName="rateTheoryMin"
+              maxName="rateTheoryMax"
+              minDefault={defaults?.rateTheoryMin}
+              maxDefault={defaults?.rateTheoryMax}
+            />
+            <RatePair
+              label={
+                intent === "professional_seeks"
+                  ? "Praxe (auto autoškoly)"
+                  : "Praxe — bez vlastního auta"
+              }
+              minName="ratePracticeMin"
+              maxName="ratePracticeMax"
+              minDefault={defaults?.ratePracticeMin}
+              maxDefault={defaults?.ratePracticeMax}
+            />
+            <RatePair
+              label={
+                intent === "professional_seeks"
+                  ? "Praxe (vlastní auto)"
+                  : "Praxe — s vlastním autem"
+              }
+              minName="ratePracticeOwnCarMin"
+              maxName="ratePracticeOwnCarMax"
+              minDefault={defaults?.ratePracticeOwnCarMin}
+              maxDefault={defaults?.ratePracticeOwnCarMax}
+            />
+            <RatePair
+              label="Zdravotní"
+              minName="rateHealthMin"
+              maxName="rateHealthMax"
+              minDefault={defaults?.rateHealthMin}
+              maxDefault={defaults?.rateHealthMax}
+            />
+          </fieldset>
+
+          {intent === "professional_seeks" ? (
+            <label className="flex items-start gap-2.5 text-sm text-[var(--color-ink)]">
+              <input
+                type="checkbox"
+                name="hasOwnVehicle"
+                defaultChecked={Boolean(defaults?.hasOwnVehicle)}
+                className="mt-0.5 h-4 w-4 rounded border-[var(--color-line-strong)] text-[var(--color-brand-700)] focus:ring-2 focus:ring-[var(--color-brand-200)]"
+              />
+              <span className="flex flex-col gap-0.5">
+                <span className="font-medium">
+                  Mám vlastní výcvikové vozidlo
+                </span>
+                <span className="text-xs text-[var(--color-ink-muted)]">
+                  Auto s duálními pedály, splňující požadavky pro výcvik.
+                  Sazba s vlastním autem výše bývá vyšší než s autoškolským.
+                </span>
+              </span>
+            </label>
+          ) : (
+            <p className="text-xs text-[var(--color-ink-muted)]">
+              Pokud nabízíš různou sazbu pro učitele bez vlastního a s
+              vlastním vozem, vyplň oba sloupce. Učitelé s vlastním autem
+              jsou pro autoškoly typicky cennější — nemusíte poskytovat
+              vozidlo a pojištění.
+            </p>
+          )}
+        </>
       )}
 
       {state?.error ? <p className="text-sm text-[var(--color-danger)]">{state.error}</p> : null}

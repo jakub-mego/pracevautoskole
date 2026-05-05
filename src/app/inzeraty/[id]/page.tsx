@@ -57,11 +57,23 @@ export default async function PublicListingPage({
   const empLabel = EMPLOYMENT_TYPE_OPTIONS.find(
     (o) => o.value === listing.employmentType,
   )?.label;
+  const isProfessional = listing.type === "professional_seeks";
+  const practiceLabel = isProfessional
+    ? "Praxe (auto autoškoly)"
+    : "Praxe — bez vlastního auta";
+  const practiceOwnCarLabel = isProfessional
+    ? "Praxe (vlastní auto)"
+    : "Praxe — s vlastním autem";
   const rates = [
     ["Teorie", fmtRate(listing.rateTheoryMin, listing.rateTheoryMax)],
-    ["Praxe", fmtRate(listing.ratePracticeMin, listing.ratePracticeMax)],
+    [practiceLabel, fmtRate(listing.ratePracticeMin, listing.ratePracticeMax)],
+    [
+      practiceOwnCarLabel,
+      fmtRate(listing.ratePracticeOwnCarMin, listing.ratePracticeOwnCarMax),
+    ],
     ["Zdravotní", fmtRate(listing.rateHealthMin, listing.rateHealthMax)],
   ].filter(([, v]) => v) as [string, string][];
+  const hasOwnVehicle = listing.hasOwnVehicle === 1;
 
   return (
     <main className="relative">
@@ -97,6 +109,11 @@ export default async function PublicListingPage({
               </Link>
             )}
             {aresVerified ? <AresVerifiedBadge size="md" /> : null}
+            {hasOwnVehicle ? (
+              <span className="rounded-full border border-[var(--color-brand-200)] bg-[var(--color-brand-50)] px-2.5 py-0.5 text-xs font-medium text-[var(--color-brand-800)]">
+                Vlastní vozidlo
+              </span>
+            ) : null}
             {cityRegion ? (
               <span className="text-[var(--color-ink-soft)]">· {cityRegion}</span>
             ) : null}
