@@ -6,13 +6,18 @@ export function Faq({ children }: { children: ReactNode }) {
 
 export function FaqItem({
   question,
+  defaultOpen,
   children,
 }: {
   question: string;
+  defaultOpen?: boolean;
   children: ReactNode;
 }) {
   return (
-    <details className="group rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)] px-5 py-4 transition open:border-[var(--color-brand-700)] open:shadow-[var(--shadow-card-hover)]">
+    <details
+      open={defaultOpen}
+      className="group rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)] px-5 py-4 transition open:border-[var(--color-brand-700)] open:shadow-[var(--shadow-card-hover)]"
+    >
       <summary className="flex cursor-pointer items-center justify-between gap-4 text-base font-semibold text-[var(--color-ink)] [&::-webkit-details-marker]:hidden">
         <span>{question}</span>
         <span

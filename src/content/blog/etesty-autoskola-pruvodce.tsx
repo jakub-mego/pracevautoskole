@@ -212,7 +212,10 @@ export default function Article() {
       <h2>Často kladené otázky</h2>
 
       <Faq>
-        <FaqItem question="Z čeho přesně se skládají oficiální e-testy autoškola?">
+        <FaqItem
+          question="Z čeho přesně se skládají oficiální e-testy autoškola?"
+          defaultOpen
+        >
           Každý teoretický test autoškola pro skupinu B obsahuje přesně 43
           otázek, za které můžete v součtu získat maximálně 120 bodů.
           K úspěšnému složení zkoušky nutně potřebujete nahrát alespoň 102

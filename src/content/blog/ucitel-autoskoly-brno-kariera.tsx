@@ -166,7 +166,10 @@ export default function Article() {
       <h2>Často kladené otázky</h2>
 
       <Faq>
-        <FaqItem question="Zvládnu to, i když si myslím, že nemám úplně svatou trpělivost?">
+        <FaqItem
+          question="Zvládnu to, i když si myslím, že nemám úplně svatou trpělivost?"
+          defaultOpen
+        >
           Určitě. Trpělivost v autě je často jen otázkou cviku a pochopení
           psychologie žáka. Navíc duální pedály ti dávají 100% kontrolu nad
           situací, takže se nemusíš bát o svou ani žákovu bezpečnost. Velmi
