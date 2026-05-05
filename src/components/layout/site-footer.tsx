@@ -104,6 +104,12 @@ export function SiteFooter() {
           >
             Blog
           </Link>
+          <Link
+            href="/cenik"
+            className="text-[var(--color-ink-muted)] transition hover:text-[var(--color-brand-700)]"
+          >
+            Ceník
+          </Link>
 
           <p className="mt-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-ink-soft)]">
             Pravidla

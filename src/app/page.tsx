@@ -252,15 +252,24 @@ export default async function Home({
               { v: "30+", l: "měst v ČR" },
               { v: "6", l: "rolí oboru" },
               { v: "120+", l: "specializovaných stránek" },
-              { v: "3 zdarma", l: "pak 299 / 790 Kč za inzerát" },
-            ].map((s) => (
-              <div key={s.l}>
-                <p className="display-md text-4xl text-white tabular-nums sm:text-5xl">
-                  {s.v}
-                </p>
-                <p className="mt-2 text-sm text-stone-400">{s.l}</p>
-              </div>
-            ))}
+              { v: "3 zdarma", l: "pak 299 / 790 Kč · viz ceník", href: "/cenik" },
+            ].map((s) => {
+              const inner = (
+                <>
+                  <p className="display-md text-4xl text-white tabular-nums sm:text-5xl">
+                    {s.v}
+                  </p>
+                  <p className="mt-2 text-sm text-stone-400">{s.l}</p>
+                </>
+              );
+              return s.href ? (
+                <Link key={s.l} href={s.href} className="block transition hover:opacity-90">
+                  {inner}
+                </Link>
+              ) : (
+                <div key={s.l}>{inner}</div>
+              );
+            })}
           </div>
         </div>
       </section>
