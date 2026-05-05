@@ -1,10 +1,12 @@
 import * as procVznika from "@/content/blog/proc-vznika-pracevautoskole";
 import * as etestyPruvodce from "@/content/blog/etesty-autoskola-pruvodce";
+import * as ucitelBrno from "@/content/blog/ucitel-autoskoly-brno-kariera";
 import type { Post, PostMeta } from "./types";
 
 const RAW_POSTS: Post[] = [
   { meta: procVznika.meta, Article: procVznika.default },
   { meta: etestyPruvodce.meta, Article: etestyPruvodce.default },
+  { meta: ucitelBrno.meta, Article: ucitelBrno.default },
 ];
 
 // Seřazené od nejnovějších.
