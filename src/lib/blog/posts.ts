@@ -8,6 +8,7 @@ import * as ucitelLiberec from "@/content/blog/ucitel-autoskoly-liberec-kariera"
 import * as ucitelOlomouc from "@/content/blog/ucitel-autoskoly-olomouc-kariera";
 import * as ucitelJihlava from "@/content/blog/ucitel-autoskoly-jihlava-kariera";
 import * as rekvalifikaceZeny from "@/content/blog/rekvalifikacni-kurzy-pro-zeny-ucitelka-autoskoly";
+import * as kolikBere from "@/content/blog/kolik-bere-instruktor-autoskoly";
 import type { Post, PostMeta } from "./types";
 
 const RAW_POSTS: Post[] = [
@@ -21,6 +22,7 @@ const RAW_POSTS: Post[] = [
   { meta: ucitelOlomouc.meta, Article: ucitelOlomouc.default },
   { meta: ucitelJihlava.meta, Article: ucitelJihlava.default },
   { meta: rekvalifikaceZeny.meta, Article: rekvalifikaceZeny.default },
+  { meta: kolikBere.meta, Article: kolikBere.default },
 ];
 
 // Seřazené od nejnovějších.
