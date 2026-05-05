@@ -11,7 +11,7 @@ export default function TermsPage() {
         Podmínky používání
       </h1>
       <p className="mt-2 text-sm text-[var(--color-ink-soft)]">
-        Naposledy aktualizováno: 2026-05-04
+        Naposledy aktualizováno: 2026-05-05
       </p>
 
       <section className="prose prose-zinc mt-8 max-w-none text-[var(--color-ink)]">
@@ -100,7 +100,17 @@ export default function TermsPage() {
           <li>
             kontaktní údaje třetích osob bez jejich souhlasu;
           </li>
-          <li>vulgární, urážlivý či výhružný obsah.</li>
+          <li>vulgární, urážlivý či výhružný obsah;</li>
+          <li>
+            <strong>
+              jakékoli odkazy, zmínky, propagaci nebo nabídky kurzů pro
+              budoucí učitele autoškoly mimo placený inzerát typu „kurz pro
+              učitele"
+            </strong>{" "}
+            (zejména v běžných pracovních inzerátech, popisu profilu, blogu,
+            zprávách mezi uživateli ani jinde na platformě). Pravidla a
+            sankce viz § 6.
+          </li>
         </ul>
         <p className="mt-2">
           Provozovatel si vyhrazuje právo bez náhrady smazat inzerát či profil,
@@ -111,8 +121,9 @@ export default function TermsPage() {
           5. Platby
         </h2>
         <p className="mt-2">
-          Každý profil má první <strong>3 zveřejněné inzeráty zdarma</strong>.
-          Každý další zveřejněný inzerát je zpoplatněn:
+          Pro běžné pracovní inzeráty má každý profil první{" "}
+          <strong>3 zveřejněné inzeráty zdarma</strong>. Každý další
+          zveřejněný inzerát je zpoplatněn:
         </p>
         <ul className="mt-2 list-disc pl-6">
           <li>
@@ -121,6 +132,11 @@ export default function TermsPage() {
           <li>
             <strong>299 Kč</strong> za inzerát pro profesionála (učitel,
             lektor, soudní tlumočník a další)
+          </li>
+          <li>
+            <strong>999 Kč</strong> za inzerát s nabídkou kurzu pro
+            budoucí učitele autoškoly. <strong>Žádná free quota</strong>{" "}
+            — kurz je placený od prvního zveřejnění.
           </li>
         </ul>
         <p className="mt-2">
@@ -140,7 +156,58 @@ export default function TermsPage() {
         </p>
 
         <h2 className="mt-8 text-xl font-semibold text-[var(--color-ink)]">
-          6. Omezení odpovědnosti
+          6. Exkluzivita obsahu o kurzech učitelů autoškoly
+        </h2>
+        <p className="mt-2">
+          Kurzy pro budoucí učitele autoškoly (typicky příprava na
+          profesní osvědčení dle zákona č. 247/2000 Sb.) představují
+          samostatnou placenou kategorii inzerce na platformě. Aby byla
+          zachována přehlednost pro uživatele a férovost vůči autoškolám,
+          které kurz inzerují legitimní cestou, platí:
+        </p>
+        <ul className="mt-2 list-disc pl-6">
+          <li>
+            Jakékoli <strong>odkazy, zmínky, propagaci nebo nabídky kurzů
+            pro budoucí učitele autoškoly</strong> je dovoleno zveřejnit{" "}
+            <strong>výhradně v rámci placeného inzerátu typu „kurz pro
+            učitele"</strong> (viz § 5).
+          </li>
+          <li>
+            Toto pravidlo se vztahuje na <strong>celou platformu</strong>{" "}
+            — běžné pracovní inzeráty, popis profilu autoškoly i
+            profesionála, soukromé zprávy mezi uživateli, komentáře u
+            inzerátů, kontaktní pole, recenze i jakýkoli jiný uživatelský
+            obsah.
+          </li>
+          <li>
+            Při <strong>prvním porušení</strong> má provozovatel právo
+            sporný obsah bez náhrady smazat a uživatele písemně upozornit.
+          </li>
+          <li>
+            Při <strong>opakovaném porušení nebo zjevně úmyslném obcházení
+            pravidla</strong> je uživatel povinen uhradit provozovateli{" "}
+            <strong>smluvní pokutu ve výši 2&nbsp;000&nbsp;Kč za každý
+            případ porušení</strong>. Pokuta je splatná do 14 dnů od
+            doručení výzvy. Zaplacením pokuty není dotčen nárok provozovatele
+            na náhradu škody.
+          </li>
+          <li>
+            V závažných nebo opakovaných případech si provozovatel
+            vyhrazuje právo <strong>trvale smazat účet</strong> uživatele,
+            jeho profil i všechny související inzeráty bez nároku na
+            vrácení dříve uhrazených poplatků za zveřejnění.
+          </li>
+        </ul>
+        <p className="mt-2">
+          <strong>Výjimky</strong> z tohoto pravidla jsou možné{" "}
+          <strong>pouze na základě písemné dohody s provozovatelem</strong>{" "}
+          — typicky pro mediální partnerství, sponzorovaný obsah nebo jiné
+          komerční ujednání. Bez takové dohody platí výše uvedené sankce
+          v plném rozsahu.
+        </p>
+
+        <h2 className="mt-8 text-xl font-semibold text-[var(--color-ink)]">
+          7. Omezení odpovědnosti
         </h2>
         <ul className="mt-2 list-disc pl-6">
           <li>
@@ -165,7 +232,7 @@ export default function TermsPage() {
         </ul>
 
         <h2 className="mt-8 text-xl font-semibold text-[var(--color-ink)]">
-          7. Smazání účtu a obsahu
+          8. Smazání účtu a obsahu
         </h2>
         <p className="mt-2">
           Účet můžeš kdykoli smazat v sekci „Můj profil“. Smazání odstraní
@@ -175,7 +242,7 @@ export default function TermsPage() {
         </p>
 
         <h2 className="mt-8 text-xl font-semibold text-[var(--color-ink)]">
-          8. Ochrana osobních údajů
+          9. Ochrana osobních údajů
         </h2>
         <p className="mt-2">
           Pravidla zpracování osobních údajů jsou v dokumentu{" "}
@@ -189,7 +256,7 @@ export default function TermsPage() {
         </p>
 
         <h2 className="mt-8 text-xl font-semibold text-[var(--color-ink)]">
-          9. Změny podmínek
+          10. Změny podmínek
         </h2>
         <p className="mt-2">
           Provozovatel může tyto podmínky přiměřeně měnit. Pokud změna
@@ -198,7 +265,7 @@ export default function TermsPage() {
         </p>
 
         <h2 className="mt-8 text-xl font-semibold text-[var(--color-ink)]">
-          10. Rozhodné právo a soud
+          11. Rozhodné právo a soud
         </h2>
         <p className="mt-2">
           Vztah mezi tebou a Provozovatelem se řídí právním řádem České
@@ -217,7 +284,7 @@ export default function TermsPage() {
         </p>
 
         <h2 className="mt-8 text-xl font-semibold text-[var(--color-ink)]">
-          11. Kontakt
+          12. Kontakt
         </h2>
         <p className="mt-2">
           <a
