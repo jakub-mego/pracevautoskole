@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignOutButton } from "@/components/forms/sign-out-button";
@@ -68,22 +69,16 @@ export function MobileNav({
         {open ? <CloseIcon /> : <BurgerIcon />}
       </button>
 
-      {open ? (
-        <div
-          id={panelId}
-          className="fixed inset-x-0 top-14 bottom-0 z-40 flex flex-col overflow-hidden bg-[var(--color-paper)]"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Hlavní menu"
-        >
-          <button
-            type="button"
-            aria-label="Zavřít menu"
-            onClick={() => setOpen(false)}
-            className="absolute inset-0 -z-10 cursor-default bg-transparent"
-            tabIndex={-1}
-          />
-          <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-4 py-4">
+      {open
+        ? createPortal(
+            <div
+              id={panelId}
+              className="fixed inset-x-0 top-14 bottom-0 z-40 flex flex-col overflow-hidden bg-[var(--color-paper)]"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Hlavní menu"
+            >
+              <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-4 py-4">
             {mainItems.map((item) => (
               <MobileNavLink key={item.href} item={item} />
             ))}
@@ -127,9 +122,11 @@ export function MobileNav({
                 </Link>
               </div>
             )}
-          </nav>
-        </div>
-      ) : null}
+              </nav>
+            </div>,
+            document.body,
+          )
+        : null}
     </>
   );
 }
