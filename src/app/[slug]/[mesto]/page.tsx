@@ -8,6 +8,9 @@ import {
 } from "@/lib/seo/landing-data";
 import { listLandingListings } from "@/lib/listings/queries";
 import { LandingListingList } from "@/components/marketing/landing-listing-list";
+import { Breadcrumbs } from "@/components/layout/breadcrumbs";
+import { BlogTeasers } from "@/components/blog/blog-teasers";
+import { findPostsByAnyTag } from "@/lib/blog/related";
 
 // Renderujeme na request, ne při buildu — build kontejner nemá síť na DB.
 export const dynamic = "force-dynamic";
@@ -39,28 +42,18 @@ export default async function LandingComboPage({
   if (!r || !c) notFound();
 
   const rows = await listLandingListings({ role: r.role, cityName: c.name });
+  const comboPosts = findPostsByAnyTag([c.slug, r.slug, "kariera"], 4);
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
-      <nav className="text-sm text-[var(--color-ink-muted)]">
-        <Link href="/profese" className="hover:text-[var(--color-ink)]">
-          Profese
-        </Link>
-        {" · "}
-        <Link
-          href={`/${r.slug}`}
-          className="hover:text-[var(--color-ink)]"
-        >
-          {r.name}
-        </Link>
-        {" · "}
-        <Link
-          href={`/${c.slug}`}
-          className="hover:text-[var(--color-ink)]"
-        >
-          {c.name}
-        </Link>
-      </nav>
+      <Breadcrumbs
+        items={[
+          { label: "Profese a města", href: "/profese" },
+          { label: r.name, href: `/${r.slug}` },
+          { label: c.name, href: `/${c.slug}` },
+          { label: `${r.name} ${c.name}` },
+        ]}
+      />
 
       <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--color-ink)]">
         {r.name} {c.name}
@@ -135,6 +128,11 @@ export default async function LandingComboPage({
           </ul>
         </div>
       </section>
+
+      <BlogTeasers
+        posts={comboPosts}
+        heading={`Z blogu — ${r.name.toLowerCase()} a ${c.name}`}
+      />
     </main>
   );
 }

@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPostBySlug, POSTS } from "@/lib/blog/posts";
+import { findRelatedPostsByTags } from "@/lib/blog/related";
+import { BlogTeasers } from "@/components/blog/blog-teasers";
+import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 
 export function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.meta.slug }));
@@ -36,15 +39,16 @@ export default async function BlogPostPage({
   const post = getPostBySlug(slug);
   if (!post) notFound();
   const { meta, Article } = post;
+  const related = findRelatedPostsByTags(meta.tags ?? [], meta.slug, 4);
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-12">
-      <Link
-        href="/blog"
-        className="text-sm text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
-      >
-        ← Zpět na blog
-      </Link>
+      <Breadcrumbs
+        items={[
+          { label: "Blog", href: "/blog" },
+          { label: meta.title },
+        ]}
+      />
 
       <header className="mt-6">
         <p className="text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">
@@ -75,6 +79,12 @@ export default async function BlogPostPage({
       >
         <Article />
       </article>
+
+      <BlogTeasers
+        posts={related}
+        heading="Mohlo by tě taky zajímat"
+        subheading="Další články k tématům, která tě přivedla sem."
+      />
 
       <footer className="mt-16 border-t border-[var(--color-line)] pt-8">
         <p className="text-sm text-[var(--color-ink-muted)]">

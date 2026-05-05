@@ -9,6 +9,9 @@ import {
 } from "@/lib/seo/landing-data";
 import { listLandingListings } from "@/lib/listings/queries";
 import { LandingListingList } from "@/components/marketing/landing-listing-list";
+import { Breadcrumbs } from "@/components/layout/breadcrumbs";
+import { BlogTeasers } from "@/components/blog/blog-teasers";
+import { findPostsByAnyTag } from "@/lib/blog/related";
 
 // Renderujeme na request, ne při buildu — build kontejner nemá síť na DB.
 // Cache na CDN/proxy řešíme `revalidate`em (1 hod = stačí pro inzeráty).
@@ -128,9 +131,19 @@ export default async function LandingSlugPage({
 
   if (city) {
     const rows = await listLandingListings({ cityName: city.name });
+    const cityPosts = findPostsByAnyTag([city.slug], 4);
+    const sameRegionCities = SEO_CITIES.filter(
+      (c) => c.region === city.region && c.slug !== city.slug,
+    ).slice(0, 6);
     return (
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
-        <p className="text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">{city.region}</p>
+        <Breadcrumbs
+          items={[
+            { label: "Profese a města", href: "/profese" },
+            { label: city.name },
+          ]}
+        />
+        <p className="mt-4 text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">{city.region}</p>
         <h1 className="display-md mt-2 text-3xl text-[var(--color-ink)] sm:text-4xl">
           Práce v autoškole {city.name}
         </h1>
@@ -177,6 +190,32 @@ export default async function LandingSlugPage({
             ))}
           </ul>
         </section>
+
+        {sameRegionCities.length ? (
+          <section className="mt-10">
+            <h2 className="display-xs text-lg text-[var(--color-ink)]">
+              Další města v kraji ({city.region})
+            </h2>
+            <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
+              {sameRegionCities.map((c) => (
+                <li key={c.slug}>
+                  <Link
+                    href={`/${c.slug}`}
+                    className="text-sm text-[var(--color-ink-muted)] underline hover:text-[var(--color-ink)]"
+                  >
+                    Práce v autoškole {c.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        <BlogTeasers
+          posts={cityPosts}
+          heading={`Z blogu o ${city.name}`}
+          subheading={`Reálné zkušenosti, kariérní tipy a info o trhu v ${city.name} a okolí.`}
+        />
       </main>
     );
   }
@@ -184,11 +223,18 @@ export default async function LandingSlugPage({
   // Role landing — long-form SEO content
   const r = role!;
   const rows = await listLandingListings({ role: r.role });
+  const rolePosts = findPostsByAnyTag([r.slug, "ucitel-autoskoly", "kariera"], 4);
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
       <RoleStructuredData role={r} />
 
-      <p className="text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">Profese v autoškole</p>
+      <Breadcrumbs
+        items={[
+          { label: "Profese a města", href: "/profese" },
+          { label: r.name },
+        ]}
+      />
+      <p className="mt-4 text-xs uppercase tracking-wide text-[var(--color-ink-soft)]">Profese v autoškole</p>
       <h1 className="display-md mt-2 text-3xl text-[var(--color-ink)] sm:text-5xl">
         {r.name}
       </h1>
@@ -350,6 +396,12 @@ export default async function LandingSlugPage({
           </ul>
         </section>
       ) : null}
+
+      <BlogTeasers
+        posts={rolePosts}
+        heading={`Z blogu o profesi ${r.name.toLowerCase()}`}
+        subheading="Praktické tipy, příběhy a kariérní průvodci k téhle pozici."
+      />
     </main>
   );
 }

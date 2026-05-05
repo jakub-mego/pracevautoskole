@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getSession } from "@/lib/auth/server";
 import { ButtonLink, ArrowRight } from "@/components/ui/button";
 import { Eyebrow, Pill } from "@/components/ui/eyebrow";
+import { BlogTeasers } from "@/components/blog/blog-teasers";
+import { listRecentPosts } from "@/lib/blog/related";
 
 const ROLES_TICKER = [
   "Učitel autoškoly",
@@ -299,6 +301,29 @@ export default async function Home({
                 </span>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* BLOG TEASERS =============================================== */}
+      <section className="relative">
+        <div className="mx-auto w-full max-w-6xl px-6 pb-12 sm:pb-16">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <Eyebrow>Blog</Eyebrow>
+              <h2 className="display-sm mt-3 text-3xl text-[var(--color-ink)] sm:text-4xl md:text-5xl">
+                Z blogu o oboru
+              </h2>
+            </div>
+            <Link
+              href="/blog"
+              className="text-sm font-medium text-[var(--color-brand-700)] hover:underline"
+            >
+              Všechny články →
+            </Link>
+          </div>
+          <div className="mt-2">
+            <BlogTeasers posts={listRecentPosts(4)} />
           </div>
         </div>
       </section>
