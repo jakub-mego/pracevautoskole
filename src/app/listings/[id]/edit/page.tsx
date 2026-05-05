@@ -8,6 +8,8 @@ import {
 } from "@/lib/listings/queries";
 import {
   computeListingPublishPriceCzk,
+  computeBoostPriceCzk,
+  BOOST_DURATION_DAYS,
   FREE_LISTING_QUOTA,
 } from "@/lib/payments/products";
 import { ListingForm } from "@/components/forms/listing-form";
@@ -49,6 +51,18 @@ export default async function EditListingPage({
     });
     publishHint = { priceCzk, nextIndex: publishedCount + 1 };
   }
+
+  const boostPriceCzk =
+    profile.type === "employer" || profile.type === "professional"
+      ? computeBoostPriceCzk(profile.type)
+      : null;
+  const boostedUntil = owned.listing.boostedUntil;
+  const isBoostActive =
+    boostedUntil != null && new Date(boostedUntil).getTime() > Date.now();
+  const showBoostBox =
+    owned.listing.status === "active" &&
+    owned.listing.type !== "employer_course" &&
+    boostPriceCzk != null;
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-12">
@@ -113,6 +127,59 @@ export default async function EditListingPage({
       <div className="mt-6">
         <ListingActions id={id} status={owned.listing.status} />
       </div>
+
+      {showBoostBox ? (
+        <div className="mt-6 rounded-2xl border border-[var(--color-brand-200)] bg-[var(--color-brand-50)] p-5">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--color-brand-800)]">
+            Topování
+          </p>
+          {isBoostActive && boostedUntil ? (
+            <>
+              <h2 className="display-xs mt-1 text-lg text-[var(--color-ink)]">
+                Inzerát je topovaný
+              </h2>
+              <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
+                Zobrazuje se nahoře ve výpisu do{" "}
+                <strong>
+                  {new Date(boostedUntil).toLocaleString("cs-CZ", {
+                    day: "numeric",
+                    month: "long",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </strong>
+                . Můžeš topování prodloužit o další týden — čas se přičte
+                k aktuálnímu konci.
+              </p>
+              <Link
+                href={`/payments?listingId=${id}&product=listing_boost`}
+                className="mt-4 inline-block rounded-md border border-[var(--color-line-strong)] bg-[var(--color-paper)] px-4 py-2 text-sm font-medium text-[var(--color-ink)] hover:border-[var(--color-brand-700)]"
+              >
+                Prodloužit topování o {BOOST_DURATION_DAYS} dní za{" "}
+                {boostPriceCzk} Kč
+              </Link>
+            </>
+          ) : (
+            <>
+              <h2 className="display-xs mt-1 text-lg text-[var(--color-ink)]">
+                Dostat inzerát nahoru ve výpisu
+              </h2>
+              <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
+                Topování zviditelní inzerát na <strong>{BOOST_DURATION_DAYS}{" "}
+                dní</strong> v hlavním feedu i na landing stránkách. Cena
+                pro {profile.type === "employer" ? "autoškolu" : "profesionála"}
+                : <strong>{boostPriceCzk} Kč</strong>.
+              </p>
+              <Link
+                href={`/payments?listingId=${id}&product=listing_boost`}
+                className="mt-4 inline-block rounded-md bg-[var(--color-ink)] px-4 py-2 text-sm font-semibold text-white hover:bg-[var(--color-brand-900)]"
+              >
+                Topovat za {boostPriceCzk} Kč / týden
+              </Link>
+            </>
+          )}
+        </div>
+      ) : null}
 
       <div className="mt-8 rounded-xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6">
         <ListingForm

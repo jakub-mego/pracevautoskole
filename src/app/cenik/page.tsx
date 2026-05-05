@@ -6,7 +6,9 @@ import {
   LISTING_PUBLISH_PRICE_EMPLOYER_CZK,
   LISTING_PUBLISH_PRICE_PROFESSIONAL_CZK,
   LISTING_PUBLISH_PRICE_COURSE_CZK,
-  PRODUCTS,
+  BOOST_PRICE_EMPLOYER_CZK,
+  BOOST_PRICE_PROFESSIONAL_CZK,
+  BOOST_DURATION_DAYS,
 } from "@/lib/payments/products";
 
 export const metadata = {
@@ -159,24 +161,42 @@ export default function CenikPage() {
 
       <section className="mt-12 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6">
         <h2 className="display-xs text-lg text-[var(--color-ink)]">
-          Volitelné rozšíření
+          Topování — dostat inzerát nahoru
         </h2>
         <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
-          Doplňky, které můžeš přidat k libovolnému inzerátu po jeho zveřejnění:
+          Topování zviditelní inzerát na <strong>{BOOST_DURATION_DAYS} dní</strong>{" "}
+          v hlavním feedu i na všech landing stránkách (město, role, kombinace).
+          Cena se liší podle typu profilu:
         </p>
         <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div className="rounded-xl border border-[var(--color-line)] bg-[var(--color-canvas)] p-4">
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--color-ink-soft)]">
-              Boost
+              Topování — autoškola
             </p>
-            <p className="mt-1 text-base font-semibold text-[var(--color-ink)] tabular-nums">
-              {fmtCzk(PRODUCTS.listing_boost.priceCzk)}
+            <p className="mt-1 display-sm text-2xl text-[var(--color-ink)] tabular-nums">
+              {fmtCzk(BOOST_PRICE_EMPLOYER_CZK)}
             </p>
             <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
-              {PRODUCTS.listing_boost.description}
+              za týden viditelnosti nahoře ve výpisu
+            </p>
+          </div>
+          <div className="rounded-xl border border-[var(--color-line)] bg-[var(--color-canvas)] p-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[var(--color-ink-soft)]">
+              Topování — profesionál
+            </p>
+            <p className="mt-1 display-sm text-2xl text-[var(--color-ink)] tabular-nums">
+              {fmtCzk(BOOST_PRICE_PROFESSIONAL_CZK)}
+            </p>
+            <p className="mt-1 text-xs text-[var(--color-ink-muted)]">
+              za týden viditelnosti nahoře ve výpisu
             </p>
           </div>
         </div>
+        <p className="mt-4 text-xs text-[var(--color-ink-muted)]">
+          Topování se kupuje až po zveřejnění inzerátu — najdeš ho jako
+          tlačítko na stránce úprav inzerátu. Lze ho prodloužit kdykoliv
+          v průběhu, čas se přičte k aktuálnímu konci.
+        </p>
       </section>
 
       <section className="mt-12">

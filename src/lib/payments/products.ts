@@ -29,6 +29,13 @@ export const LISTING_PUBLISH_PRICE_PROFESSIONAL_CZK = 299;
 /** Cena za zveřejnění kurzu pro učitele autoškoly — vždy, žádná free quota. */
 export const LISTING_PUBLISH_PRICE_COURSE_CZK = 999;
 
+/** Cena topování (boost) pro autoškolu — týden viditelnosti nahoře. */
+export const BOOST_PRICE_EMPLOYER_CZK = 299;
+/** Cena topování (boost) pro profesionála — týden viditelnosti nahoře. */
+export const BOOST_PRICE_PROFESSIONAL_CZK = 99;
+/** Doba boost expirace (dny). */
+export const BOOST_DURATION_DAYS = 7;
+
 export const PRODUCTS: Record<ProductKind, Product> = {
   listing_publish: {
     kind: "listing_publish",
@@ -42,10 +49,14 @@ export const PRODUCTS: Record<ProductKind, Product> = {
   },
   listing_boost: {
     kind: "listing_boost",
-    name: "Zvýraznění inzerátu",
-    description: "Tvůj inzerát bude 30 dní nahoře ve výpisu.",
-    priceCzk: 99,
-    validityDays: 30,
+    name: "Topování inzerátu",
+    description:
+      "Inzerát se zobrazí týden nahoře ve veřejném výpisu. Cena se liší podle typu profilu (autoškola 299 Kč, profesionál 99 Kč).",
+    // Cena se počítá dynamicky dle profilu (computeBoostPriceCzk).
+    // Tahle hodnota je fallback pro UI, které nezná typ profilu.
+    priceCzk: BOOST_PRICE_EMPLOYER_CZK,
+    hidden: true,
+    validityDays: BOOST_DURATION_DAYS,
   },
   active_badge: {
     kind: "active_badge",
@@ -73,6 +84,17 @@ export function getProduct(kind: ProductKind): Product {
 
 export function listVisibleProducts(): Product[] {
   return Object.values(PRODUCTS).filter((p) => !p.hidden);
+}
+
+/**
+ * Cena topování (boost) — záleží na typu profilu, ne na typu inzerátu.
+ */
+export function computeBoostPriceCzk(
+  profileType: "employer" | "professional",
+): number {
+  return profileType === "employer"
+    ? BOOST_PRICE_EMPLOYER_CZK
+    : BOOST_PRICE_PROFESSIONAL_CZK;
 }
 
 /**

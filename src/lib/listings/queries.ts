@@ -231,13 +231,19 @@ export async function listLandingListings(args: {
     return baseQuery
       .innerJoin(listingRoles, eq(listingRoles.listingId, listings.id))
       .where(and(...where, eq(listingRoles.role, role)))
-      .orderBy(desc(listings.publishedAt))
+      .orderBy(
+        sql`case when ${listings.boostedUntil} is not null and ${listings.boostedUntil} > now() then 0 else 1 end`,
+        desc(listings.publishedAt),
+      )
       .limit(limit);
   }
 
   return baseQuery
     .where(and(...where))
-    .orderBy(desc(listings.publishedAt))
+    .orderBy(
+      sql`case when ${listings.boostedUntil} is not null and ${listings.boostedUntil} > now() then 0 else 1 end`,
+      desc(listings.publishedAt),
+    )
     .limit(limit);
 }
 
@@ -279,7 +285,11 @@ export async function listPublicListings(filters: PublicListFilters = {}) {
       eq(employerProfiles.profileId, profiles.id),
     )
     .where(and(...where))
-    .orderBy(desc(listings.publishedAt))
+    .orderBy(
+      // Topované inzeráty (boostedUntil > now) první.
+      sql`case when ${listings.boostedUntil} is not null and ${listings.boostedUntil} > now() then 0 else 1 end`,
+      desc(listings.publishedAt),
+    )
     .limit(perPage)
     .offset(offset);
 

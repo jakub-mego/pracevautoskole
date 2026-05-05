@@ -9,6 +9,7 @@ import { newId } from "@/lib/utils/id";
 import {
   getProduct,
   computeListingPublishPriceCzk,
+  computeBoostPriceCzk,
   type ProductKind,
 } from "@/lib/payments/products";
 import { countPublishedListings } from "@/lib/listings/queries";
@@ -35,6 +36,12 @@ async function resolveAmountCzk(
   profile: { id: string; type: "employer" | "professional" | string },
   listingId?: string,
 ): Promise<number> {
+  if (product === "listing_boost") {
+    if (profile.type !== "employer" && profile.type !== "professional") {
+      throw new Error("Neznámý typ profilu pro boost pricing.");
+    }
+    return computeBoostPriceCzk(profile.type);
+  }
   if (product !== "listing_publish") {
     return getProduct(product).priceCzk;
   }

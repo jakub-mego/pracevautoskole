@@ -4,6 +4,8 @@ import {
   listVisibleProducts,
   getProduct,
   computeListingPublishPriceCzk,
+  computeBoostPriceCzk,
+  BOOST_DURATION_DAYS,
 } from "@/lib/payments/products";
 import { listPaymentsByUser } from "@/lib/payments/queries";
 import { isStripeConfigured } from "@/lib/payments/stripe";
@@ -22,7 +24,7 @@ export const metadata = {
 export default async function PaymentsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ listingId?: string }>;
+  searchParams: Promise<{ listingId?: string; product?: string }>;
 }) {
   const session = await requireSession();
   const sp = await searchParams;
@@ -31,31 +33,52 @@ export default async function PaymentsPage({
   const stripeAvailable = isStripeConfigured();
   const fioAvailable = isFioConfigured();
 
-  let listingPaymentBlock: {
-    listingId: string;
-    title: string;
-    priceCzk: number;
-  } | null = null;
+  type Block =
+    | {
+        kind: "publish";
+        listingId: string;
+        title: string;
+        priceCzk: number;
+      }
+    | {
+        kind: "boost";
+        listingId: string;
+        title: string;
+        priceCzk: number;
+      };
+
+  let listingPaymentBlock: Block | null = null;
   if (sp.listingId) {
     const profile = await getProfileByUserId(session.user.id);
     if (profile && (profile.type === "employer" || profile.type === "professional")) {
       const owned = await getOwnedListing(sp.listingId, profile.id);
       if (owned) {
-        const publishedCount = await countPublishedListings(profile.id);
-        const priceCzk = computeListingPublishPriceCzk({
-          profileType: profile.type,
-          listingType: owned.listing.type as
-            | "employer_seeks"
-            | "professional_seeks"
-            | "employer_course",
-          alreadyPublishedCount: publishedCount,
-        });
-        if (priceCzk > 0) {
+        if (sp.product === "listing_boost") {
+          const priceCzk = computeBoostPriceCzk(profile.type);
           listingPaymentBlock = {
+            kind: "boost",
             listingId: sp.listingId,
             title: owned.listing.title,
             priceCzk,
           };
+        } else {
+          const publishedCount = await countPublishedListings(profile.id);
+          const priceCzk = computeListingPublishPriceCzk({
+            profileType: profile.type,
+            listingType: owned.listing.type as
+              | "employer_seeks"
+              | "professional_seeks"
+              | "employer_course",
+            alreadyPublishedCount: publishedCount,
+          });
+          if (priceCzk > 0) {
+            listingPaymentBlock = {
+              kind: "publish",
+              listingId: sp.listingId,
+              title: owned.listing.title,
+              priceCzk,
+            };
+          }
         }
       }
     }
@@ -72,26 +95,54 @@ export default async function PaymentsPage({
 
       {listingPaymentBlock ? (
         <section className="mt-8 rounded-2xl border border-[var(--color-brand-200)] bg-[var(--color-brand-50)] p-6">
-          <h2 className="display-xs text-lg text-[var(--color-ink)]">
-            Zveřejnit inzerát
-          </h2>
-          <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
-            <span className="font-medium text-[var(--color-ink)]">
-              {listingPaymentBlock.title}
-            </span>
-            {" — "}
-            první 3 inzeráty jsi už spotřeboval/a, tento se zveřejní po zaplacení.
-          </p>
-          <div className="mt-4">
-            <PaymentMethodPicker
-              product="listing_publish"
-              listingId={listingPaymentBlock.listingId}
-              productName="Publikace inzerátu"
-              priceCzk={listingPaymentBlock.priceCzk}
-              stripeAvailable={stripeAvailable}
-              fioAvailable={fioAvailable}
-            />
-          </div>
+          {listingPaymentBlock.kind === "boost" ? (
+            <>
+              <h2 className="display-xs text-lg text-[var(--color-ink)]">
+                Topování inzerátu
+              </h2>
+              <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
+                <span className="font-medium text-[var(--color-ink)]">
+                  {listingPaymentBlock.title}
+                </span>
+                {" — "}
+                po zaplacení se {BOOST_DURATION_DAYS} dní zobrazuje nahoře
+                ve veřejném výpisu i na landing stránkách.
+              </p>
+              <div className="mt-4">
+                <PaymentMethodPicker
+                  product="listing_boost"
+                  listingId={listingPaymentBlock.listingId}
+                  productName={`Topování (${BOOST_DURATION_DAYS} dní)`}
+                  priceCzk={listingPaymentBlock.priceCzk}
+                  stripeAvailable={stripeAvailable}
+                  fioAvailable={fioAvailable}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 className="display-xs text-lg text-[var(--color-ink)]">
+                Zveřejnit inzerát
+              </h2>
+              <p className="mt-2 text-sm text-[var(--color-ink-muted)]">
+                <span className="font-medium text-[var(--color-ink)]">
+                  {listingPaymentBlock.title}
+                </span>
+                {" — "}
+                první 3 inzeráty jsi už spotřeboval/a, tento se zveřejní po zaplacení.
+              </p>
+              <div className="mt-4">
+                <PaymentMethodPicker
+                  product="listing_publish"
+                  listingId={listingPaymentBlock.listingId}
+                  productName="Publikace inzerátu"
+                  priceCzk={listingPaymentBlock.priceCzk}
+                  stripeAvailable={stripeAvailable}
+                  fioAvailable={fioAvailable}
+                />
+              </div>
+            </>
+          )}
         </section>
       ) : null}
 
