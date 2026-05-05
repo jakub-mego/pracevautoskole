@@ -3,12 +3,29 @@ import { getSession, getCurrentUserRole } from "@/lib/auth/server";
 import { getProfileByUserId } from "@/lib/profiles/queries";
 import { countUnreadForProfile } from "@/lib/messaging/queries";
 import { SignOutButton } from "@/components/forms/sign-out-button";
+import { MobileNav, type MobileNavItem } from "./mobile-nav";
 
 export async function SiteHeader() {
   const session = await getSession();
   const role = session ? await getCurrentUserRole() : null;
   const profile = session ? await getProfileByUserId(session.user.id) : null;
   const unread = profile ? await countUnreadForProfile(profile.id) : 0;
+
+  const mainItems: MobileNavItem[] = [
+    { href: "/inzeraty", label: "Inzeráty" },
+    { href: "/kurzy-pro-ucitele", label: "Kurzy pro učitele" },
+    { href: "/cenik", label: "Ceník" },
+    { href: "/profese", label: "Profese a města" },
+  ];
+
+  const userItems: MobileNavItem[] = session
+    ? [
+        { href: "/listings", label: "Moje inzeráty" },
+        { href: "/zpravy", label: "Zprávy", badge: unread > 0 ? unread : undefined },
+        { href: "/profile", label: "Profil" },
+        { href: "/dashboard", label: "Přehled" },
+      ]
+    : [];
 
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--color-line-soft)] bg-[var(--color-paper)]/85 backdrop-blur">
@@ -24,19 +41,19 @@ export async function SiteHeader() {
           pracevautoskole.cz
         </Link>
 
-        <nav className="flex items-center gap-1 text-sm">
-          <NavLink href="/inzeraty">Inzeráty</NavLink>
-          <NavLink href="/kurzy-pro-ucitele">Kurzy pro učitele</NavLink>
-          <NavLink href="/cenik">Ceník</NavLink>
-          <NavLink href="/profese">Profese a města</NavLink>
+        <nav className="hidden items-center gap-1 text-sm lg:flex">
+          {mainItems.map((item) => (
+            <NavLink key={item.href} href={item.href}>
+              {item.label}
+            </NavLink>
+          ))}
           {session ? (
             <>
-              <NavLink href="/listings">Moje inzeráty</NavLink>
-              <NavLink href="/zpravy" badge={unread > 0 ? unread : undefined}>
-                Zprávy
-              </NavLink>
-              <NavLink href="/profile">Profil</NavLink>
-              <NavLink href="/dashboard">Přehled</NavLink>
+              {userItems.map((item) => (
+                <NavLink key={item.href} href={item.href} badge={item.badge}>
+                  {item.label}
+                </NavLink>
+              ))}
               {role === "admin" ? (
                 <Link
                   href="/admin"
@@ -45,7 +62,7 @@ export async function SiteHeader() {
                   Admin
                 </Link>
               ) : null}
-              <span className="hidden pl-2 text-xs text-[var(--color-ink-soft)] sm:inline">
+              <span className="hidden pl-2 text-xs text-[var(--color-ink-soft)] xl:inline">
                 {session.user.email}
               </span>
               <SignOutButton />
@@ -67,6 +84,16 @@ export async function SiteHeader() {
             </>
           )}
         </nav>
+
+        <div className="lg:hidden">
+          <MobileNav
+            mainItems={mainItems}
+            userItems={userItems}
+            isAuthenticated={Boolean(session)}
+            userEmail={session?.user.email}
+            showAdmin={role === "admin"}
+          />
+        </div>
       </div>
     </header>
   );
