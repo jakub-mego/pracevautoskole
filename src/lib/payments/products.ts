@@ -26,6 +26,8 @@ export const FREE_LISTING_QUOTA = 3;
 export const LISTING_PUBLISH_PRICE_EMPLOYER_CZK = 790;
 /** Cena za zveřejnění dalšího inzerátu nad rámec free quoty (profesionál). */
 export const LISTING_PUBLISH_PRICE_PROFESSIONAL_CZK = 299;
+/** Cena za zveřejnění kurzu pro učitele autoškoly — vždy, žádná free quota. */
+export const LISTING_PUBLISH_PRICE_COURSE_CZK = 999;
 
 export const PRODUCTS: Record<ProductKind, Product> = {
   listing_publish: {
@@ -74,13 +76,20 @@ export function listVisibleProducts(): Product[] {
 }
 
 /**
- * Cena za zveřejnění *dalšího* inzerátu pro daný typ profilu.
- * V free quotě (FREE_LISTING_QUOTA) vrací 0.
+ * Cena za zveřejnění inzerátu — různé tarify dle listing_type.
+ *
+ * - employer_course: vždy 999 Kč (žádná free quota, kurz je placený produkt)
+ * - employer_seeks: 3 free + 790 Kč (autoškola hledá lidi do týmu)
+ * - professional_seeks: 3 free + 299 Kč (profesionál hledá místo)
  */
 export function computeListingPublishPriceCzk(args: {
   profileType: "employer" | "professional";
+  listingType?: "employer_seeks" | "professional_seeks" | "employer_course";
   alreadyPublishedCount: number;
 }): number {
+  if (args.listingType === "employer_course") {
+    return LISTING_PUBLISH_PRICE_COURSE_CZK;
+  }
   if (args.alreadyPublishedCount < FREE_LISTING_QUOTA) return 0;
   return args.profileType === "employer"
     ? LISTING_PUBLISH_PRICE_EMPLOYER_CZK

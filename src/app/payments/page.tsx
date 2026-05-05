@@ -44,6 +44,10 @@ export default async function PaymentsPage({
         const publishedCount = await countPublishedListings(profile.id);
         const priceCzk = computeListingPublishPriceCzk({
           profileType: profile.type,
+          listingType: owned.listing.type as
+            | "employer_seeks"
+            | "professional_seeks"
+            | "employer_course",
           alreadyPublishedCount: publishedCount,
         });
         if (priceCzk > 0) {

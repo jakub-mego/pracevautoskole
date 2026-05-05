@@ -23,7 +23,7 @@ const APP_URL =
 
 async function ownListing(listingId: string, profileId: string) {
   const rows = await db
-    .select({ id: listings.id })
+    .select({ id: listings.id, type: listings.type })
     .from(listings)
     .where(and(eq(listings.id, listingId), eq(listings.profileId, profileId)))
     .limit(1);
@@ -33,6 +33,7 @@ async function ownListing(listingId: string, profileId: string) {
 async function resolveAmountCzk(
   product: ProductKind,
   profile: { id: string; type: "employer" | "professional" | string },
+  listingId?: string,
 ): Promise<number> {
   if (product !== "listing_publish") {
     return getProduct(product).priceCzk;
@@ -40,9 +41,21 @@ async function resolveAmountCzk(
   if (profile.type !== "employer" && profile.type !== "professional") {
     throw new Error("Neznámý typ profilu pro pricing.");
   }
+  let listingType:
+    | "employer_seeks"
+    | "professional_seeks"
+    | "employer_course"
+    | undefined;
+  if (listingId) {
+    const owned = await ownListing(listingId, profile.id);
+    if (owned) {
+      listingType = owned.type as typeof listingType;
+    }
+  }
   const publishedCount = await countPublishedListings(profile.id);
   return computeListingPublishPriceCzk({
     profileType: profile.type as "employer" | "professional",
+    listingType,
     alreadyPublishedCount: publishedCount,
   });
 }
@@ -74,7 +87,7 @@ export async function startStripeCheckoutAction(input: {
     if (!owned) return { ok: false, error: "Inzerát nepatří tobě." };
   }
 
-  const amountCzk = await resolveAmountCzk(input.product, profile);
+  const amountCzk = await resolveAmountCzk(input.product, profile, input.listingId);
   if (amountCzk <= 0) {
     return { ok: false, error: "Tento produkt je zdarma." };
   }
@@ -155,7 +168,7 @@ export async function startFioPaymentAction(input: {
     if (!owned) return { ok: false, error: "Inzerát nepatří tobě." };
   }
 
-  const amountCzk = await resolveAmountCzk(input.product, profile);
+  const amountCzk = await resolveAmountCzk(input.product, profile, input.listingId);
   if (amountCzk <= 0) {
     return { ok: false, error: "Tento produkt je zdarma." };
   }

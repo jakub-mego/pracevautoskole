@@ -42,6 +42,11 @@ export const listings = pgTable(
     employmentType: text("employment_type"),
     startAvailability: text("start_availability"),
 
+    // Course-specific fields (used pouze pro type=employer_course)
+    coursePriceCzk: integer("course_price_czk"),
+    courseStartDate: timestamp("course_start_date", { withTimezone: true }),
+    courseDurationHours: integer("course_duration_hours"),
+
     publishedAt: timestamp("published_at", { withTimezone: true }),
     expiresAt: timestamp("expires_at", { withTimezone: true }),
     boostedUntil: timestamp("boosted_until", { withTimezone: true }),

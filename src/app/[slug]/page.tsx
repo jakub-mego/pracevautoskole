@@ -235,6 +235,19 @@ export default async function LandingSlugPage({
             <li key={i}>{step}</li>
           ))}
         </ol>
+        {r.role === "instructor" ? (
+          <p className="mt-4 text-sm text-[var(--color-ink-muted)]">
+            Hledáš konkrétní kurz pro získání profesního osvědčení? Aktuální
+            nabídku akreditovaných autoškol najdeš na stránce{" "}
+            <Link
+              href="/kurzy-pro-ucitele"
+              className="font-medium text-[var(--color-brand-700)] underline-offset-2 hover:underline"
+            >
+              kurzy pro budoucí učitele autoškoly
+            </Link>
+            .
+          </p>
+        ) : null}
       </section>
 
       <section className="mt-10 rounded-2xl border border-[var(--color-line)] bg-[var(--color-paper)] p-6">

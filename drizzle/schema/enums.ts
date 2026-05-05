@@ -32,6 +32,7 @@ export const licenseCategoryEnum = pgEnum("license_category", [
 export const listingTypeEnum = pgEnum("listing_type", [
   "employer_seeks",
   "professional_seeks",
+  "employer_course",
 ]);
 
 export const listingStatusEnum = pgEnum("listing_status", [

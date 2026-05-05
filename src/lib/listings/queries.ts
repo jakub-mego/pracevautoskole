@@ -116,12 +116,37 @@ export async function listActiveListingsByProfile(profileId: string) {
 }
 
 export type PublicListFilters = {
-  type?: "employer_seeks" | "professional_seeks";
+  type?: "employer_seeks" | "professional_seeks" | "employer_course";
   region?: string;
   license?: string;
   page?: number;
   perPage?: number;
 };
+
+/**
+ * Aktivní kurzy pro učitele autoškoly (pro landing page /kurzy-pro-ucitele
+ * a sekci na /ucitel-autoskoly).
+ */
+export async function listActiveCourses(limit = 20) {
+  return db
+    .select({
+      listing: listings,
+      profile: profiles,
+      aresVerifiedAt: employerProfiles.aresVerifiedAt,
+    })
+    .from(listings)
+    .innerJoin(profiles, eq(profiles.id, listings.profileId))
+    .leftJoin(employerProfiles, eq(employerProfiles.profileId, profiles.id))
+    .where(
+      and(
+        eq(listings.type, "employer_course"),
+        eq(listings.status, "active"),
+        notExpired(),
+      ),
+    )
+    .orderBy(desc(listings.publishedAt))
+    .limit(limit);
+}
 
 /**
  * Počet inzerátů, které profil už zveřejnil (publishedAt != null).
@@ -222,7 +247,12 @@ export async function listPublicListings(filters: PublicListFilters = {}) {
   const offset = (page - 1) * perPage;
 
   const where = [eq(listings.status, "active"), notExpired()];
-  if (filters.type) where.push(eq(listings.type, filters.type));
+  if (filters.type) {
+    where.push(eq(listings.type, filters.type));
+  } else {
+    // /inzeraty default = pracovní inzeráty. Kurzy mají vlastní stránku.
+    where.push(sql`${listings.type} != 'employer_course'`);
+  }
   if (filters.region) where.push(eq(listings.region, filters.region));
   if (filters.license) {
     where.push(

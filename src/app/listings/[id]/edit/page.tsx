@@ -41,6 +41,10 @@ export default async function EditListingPage({
     const publishedCount = await countPublishedListings(profile.id);
     const priceCzk = computeListingPublishPriceCzk({
       profileType: profile.type,
+      listingType: owned.listing.type as
+        | "employer_seeks"
+        | "professional_seeks"
+        | "employer_course",
       alreadyPublishedCount: publishedCount,
     });
     publishHint = { priceCzk, nextIndex: publishedCount + 1 };
@@ -82,7 +86,14 @@ export default async function EditListingPage({
               : "border-amber-200 bg-amber-50 text-amber-900")
           }
         >
-          {publishHint.priceCzk === 0 ? (
+          {owned.listing.type === "employer_course" ? (
+            <>
+              Zveřejnění kurzu pro učitele autoškoly =&nbsp;jednorázový
+              poplatek <strong>{publishHint.priceCzk} Kč</strong>. Po kliknutí
+              na „Zveřejnit" tě přesměrujeme na platbu. Inzerát je pak 90 dní
+              aktivní v sekci <em>Kurzy pro učitele</em>.
+            </>
+          ) : publishHint.priceCzk === 0 ? (
             <>
               Tento bude tvůj <strong>{publishHint.nextIndex}.</strong> inzerát z{" "}
               {FREE_LISTING_QUOTA} zdarma. Zveřejnění je{" "}
@@ -93,7 +104,7 @@ export default async function EditListingPage({
               Free quotu už máš spotřebovanou ({FREE_LISTING_QUOTA} zveřejněných).
               Zveřejnění tohoto inzerátu stojí{" "}
               <strong>{publishHint.priceCzk} Kč</strong>. Po kliknutí na
-              „Zveřejnit“ tě přesměrujeme na platbu.
+              „Zveřejnit" tě přesměrujeme na platbu.
             </>
           )}
         </div>
@@ -126,6 +137,9 @@ export default async function EditListingPage({
             startAvailability: owned.listing.startAvailability,
             roles: owned.roles,
             licenses: owned.licenses,
+            coursePriceCzk: owned.listing.coursePriceCzk,
+            courseStartDate: owned.listing.courseStartDate,
+            courseDurationHours: owned.listing.courseDurationHours,
           }}
         />
       </div>

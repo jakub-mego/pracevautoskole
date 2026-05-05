@@ -42,28 +42,48 @@ const optionalInt = z.preprocess(
   z.number().int().nonnegative().max(100000).optional(),
 );
 
-const ListingInputSchema = z.object({
-  title: z.string().trim().min(5, "Titulek aspoň 5 znaků.").max(140),
-  description: z.string().trim().min(20, "Popis aspoň 20 znaků.").max(8000),
-  region: z.string().trim().max(80).optional().or(z.literal("")),
-  city: z.string().trim().max(80).optional().or(z.literal("")),
-  postalCode: z.string().trim().max(10).optional().or(z.literal("")),
-  remoteFriendly: z.coerce.boolean().optional(),
-  travelRadiusKm: optionalInt,
-  rateTheoryMin: optionalInt,
-  rateTheoryMax: optionalInt,
-  ratePracticeMin: optionalInt,
-  ratePracticeMax: optionalInt,
-  rateHealthMin: optionalInt,
-  rateHealthMax: optionalInt,
-  employmentType: z.string().trim().max(40).optional().or(z.literal("")),
-  startAvailability: z.string().trim().max(120).optional().or(z.literal("")),
-  roles: z.array(RoleSchema).min(1, "Vyber alespoň jednu roli."),
-  licenses: z.array(LicenseSchema).default([]),
-});
+const optionalDate = z.preprocess(
+  (v) => (v === "" || v === null || v === undefined ? undefined : new Date(String(v))),
+  z.date().optional(),
+);
+
+const IntentSchema = z.enum(["job", "course"]);
+
+const ListingInputSchema = z
+  .object({
+    intent: IntentSchema.default("job"),
+    title: z.string().trim().min(5, "Titulek aspoň 5 znaků.").max(140),
+    description: z.string().trim().min(20, "Popis aspoň 20 znaků.").max(8000),
+    region: z.string().trim().max(80).optional().or(z.literal("")),
+    city: z.string().trim().max(80).optional().or(z.literal("")),
+    postalCode: z.string().trim().max(10).optional().or(z.literal("")),
+    remoteFriendly: z.coerce.boolean().optional(),
+    travelRadiusKm: optionalInt,
+    rateTheoryMin: optionalInt,
+    rateTheoryMax: optionalInt,
+    ratePracticeMin: optionalInt,
+    ratePracticeMax: optionalInt,
+    rateHealthMin: optionalInt,
+    rateHealthMax: optionalInt,
+    employmentType: z.string().trim().max(40).optional().or(z.literal("")),
+    startAvailability: z.string().trim().max(120).optional().or(z.literal("")),
+    roles: z.array(RoleSchema).default([]),
+    licenses: z.array(LicenseSchema).default([]),
+    coursePriceCzk: optionalInt,
+    courseStartDate: optionalDate,
+    courseDurationHours: optionalInt,
+  })
+  .refine(
+    (d) => d.intent === "course" || d.roles.length >= 1,
+    {
+      message: "Vyber alespoň jednu roli.",
+      path: ["roles"],
+    },
+  );
 
 function parseFromForm(formData: FormData) {
   return ListingInputSchema.safeParse({
+    intent: formData.get("intent") ?? "job",
     title: formData.get("title"),
     description: formData.get("description"),
     region: formData.get("region") ?? "",
@@ -81,6 +101,9 @@ function parseFromForm(formData: FormData) {
     startAvailability: formData.get("startAvailability") ?? "",
     roles: formData.getAll("roles"),
     licenses: formData.getAll("licenses"),
+    coursePriceCzk: formData.get("coursePriceCzk"),
+    courseStartDate: formData.get("courseStartDate") ?? "",
+    courseDurationHours: formData.get("courseDurationHours"),
   });
 }
 
@@ -103,8 +126,18 @@ export async function createListingAction(
     return { error: parsed.error.issues[0]?.message ?? "Neplatná data." };
   }
   const data = parsed.data;
+
+  // Kurz může inzerovat jen autoškola (employer)
+  if (data.intent === "course" && profile.type !== "employer") {
+    return { error: "Kurz pro učitele může inzerovat pouze autoškola." };
+  }
+
   const listingType =
-    profile.type === "employer" ? "employer_seeks" : "professional_seeks";
+    data.intent === "course"
+      ? "employer_course"
+      : profile.type === "employer"
+        ? "employer_seeks"
+        : "professional_seeks";
 
   const id = newId();
   try {
@@ -129,6 +162,10 @@ export async function createListingAction(
         rateHealthMax: data.rateHealthMax ?? null,
         employmentType: data.employmentType || null,
         startAvailability: data.startAvailability || null,
+        coursePriceCzk: data.intent === "course" ? data.coursePriceCzk ?? null : null,
+        courseStartDate: data.intent === "course" ? data.courseStartDate ?? null : null,
+        courseDurationHours:
+          data.intent === "course" ? data.courseDurationHours ?? null : null,
       });
       if (data.roles.length) {
         await tx.insert(listingRoles).values(
@@ -187,6 +224,10 @@ export async function updateListingAction(
           rateHealthMax: data.rateHealthMax ?? null,
           employmentType: data.employmentType || null,
           startAvailability: data.startAvailability || null,
+          coursePriceCzk: data.intent === "course" ? data.coursePriceCzk ?? null : null,
+          courseStartDate: data.intent === "course" ? data.courseStartDate ?? null : null,
+          courseDurationHours:
+            data.intent === "course" ? data.courseDurationHours ?? null : null,
           updatedAt: new Date(),
         })
         .where(eq(listings.id, id));
@@ -288,6 +329,10 @@ export async function publishListingAction(id: string): Promise<PublishResult> {
     const publishedCount = await countPublishedListings(profile.id);
     const priceCzk = computeListingPublishPriceCzk({
       profileType: profile.type as "employer" | "professional",
+      listingType: listing.type as
+        | "employer_seeks"
+        | "professional_seeks"
+        | "employer_course",
       alreadyPublishedCount: publishedCount,
     });
     if (priceCzk > 0) {

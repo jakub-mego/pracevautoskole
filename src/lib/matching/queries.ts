@@ -270,8 +270,15 @@ export async function computeMatchesForListing(listingId: string): Promise<numbe
     await db.delete(matches).where(eq(matches.listingId, listingId));
     return 0;
   }
+  // Kurzy pro učitele se s nikým nematchují — mají vlastní landing.
+  if (subject.row.type === "employer_course") {
+    await db.delete(matches).where(eq(matches.listingId, listingId));
+    return 0;
+  }
 
-  const candidates = await loadCounterparts(subject.row.type);
+  const candidates = await loadCounterparts(
+    subject.row.type as "employer_seeks" | "professional_seeks",
+  );
   const now = new Date();
   const rows: { id: string; listingId: string; counterpartProfileId: string; score: number; reasons: ScoreReason[]; computedAt: Date }[] = [];
 
